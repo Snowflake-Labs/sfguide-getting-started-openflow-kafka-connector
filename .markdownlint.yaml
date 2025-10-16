@@ -100,6 +100,16 @@ MD044: # Proper names should have the correct capitalization
       "GitHub",
       "JavaScript",
       "Python",
+      "Redpanda",
+      "rpk",
+      "Kafka",
+      "Kafka CLI",
+      "Kafka Topic",
+      "Kafka Partition",
+      "Kafka Replica",
+      "Kafka Leader",
+      "Kafka Follower",
+      "SASL",
     ]
   code_blocks: false # Don't check proper names in code blocks
 

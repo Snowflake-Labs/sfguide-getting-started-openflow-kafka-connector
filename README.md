@@ -81,12 +81,18 @@ python sample-data/generate_logs.py \
   --brokers YOUR-KAFKA-BROKER:9092 \
   --topic application-logs \
   --count 50
+
+# Alternative: Use rpk (simpler and faster)
+rpk topic produce application-logs \
+  --brokers YOUR-KAFKA-BROKER:9092 \
+  < sample-data/sample_logs.json
 ```
 
 ## Prerequisites
 
 - **Snowflake Account**: Enterprise account with Openflow SPCS enabled
 - **Kafka Cluster**: Access to a Kafka cluster (GCP Managed Kafka, AWS MSK, Confluent Cloud, or self-hosted)
+- **Redpanda CLI (rpk)**: Recommended for Kafka operations ([install guide](https://docs.redpanda.com/current/get-started/rpk-install/))
 - **Python 3.7+**: For the log generator script (optional)
 - **Network Connectivity**: Kafka brokers must be accessible from Snowflake
 

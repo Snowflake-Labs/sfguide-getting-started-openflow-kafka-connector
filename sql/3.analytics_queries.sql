@@ -1,0 +1,371 @@
+-- ============================================================================
+-- Copyright 2025 Snowflake Inc.
+-- SPDX-License-Identifier: Apache-2.0
+-- Licensed under the Apache License, Version 2.0 (the "License");
+-- You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
+-- ============================================================================
+--
+-- Openflow Kafka Connector Quickstart - Analytics Queries
+--
+-- This script demonstrates powerful analytics you can perform on streaming
+-- log data in Snowflake
+-- ============================================================================
+
+-- Set context
+USE ROLE QUICKSTART_ROLE;
+USE DATABASE QUICKSTART_KAFKA_CONNECTOR_DB;
+USE SCHEMA PUBLIC;
+USE WAREHOUSE QUICKSTART_KAFKA_CONNECTOR_WH;
+
+/*****************************************************
+ * BASIC LOG ANALYTICS
+ *****************************************************/
+
+-- 1. Distribution of Log Levels
+SELECT 
+  RECORD_CONTENT:level::STRING as LOG_LEVEL,
+  COUNT(*) as EVENT_COUNT,
+  ROUND(COUNT(*) * 100.0 / SUM(COUNT(*)) OVER(), 2) as PERCENTAGE
+FROM "APPLICATION-LOGS"
+GROUP BY LOG_LEVEL
+ORDER BY EVENT_COUNT DESC;
+
+-- 2. Top Error Messages
+SELECT 
+  RECORD_CONTENT:message::STRING as ERROR_MESSAGE,
+  RECORD_CONTENT:service::STRING as SERVICE,
+  COUNT(*) as ERROR_COUNT
+FROM "APPLICATION-LOGS"
+WHERE RECORD_CONTENT:level::STRING = 'ERROR'
+GROUP BY ERROR_MESSAGE, SERVICE
+ORDER BY ERROR_COUNT DESC
+LIMIT 10;
+
+-- 3. Service Health Overview
+SELECT 
+  RECORD_CONTENT:service::STRING as SERVICE_NAME,
+  COUNT(*) as TOTAL_EVENTS,
+  SUM(CASE WHEN RECORD_CONTENT:level::STRING = 'ERROR' THEN 1 ELSE 0 END) as ERROR_COUNT,
+  SUM(CASE WHEN RECORD_CONTENT:level::STRING = 'WARN' THEN 1 ELSE 0 END) as WARN_COUNT,
+  SUM(CASE WHEN RECORD_CONTENT:level::STRING = 'INFO' THEN 1 ELSE 0 END) as INFO_COUNT,
+  ROUND(ERROR_COUNT * 100.0 / NULLIF(TOTAL_EVENTS, 0), 2) as ERROR_RATE_PCT
+FROM "APPLICATION-LOGS"
+GROUP BY SERVICE_NAME
+ORDER BY ERROR_RATE_PCT DESC;
+
+/*****************************************************
+ * TIME-SERIES ANALYSIS
+ *****************************************************/
+
+-- 4. Events Per Minute (Last Hour)
+SELECT 
+  DATE_TRUNC('minute', INGESTION_TIME) as TIME_BUCKET,
+  COUNT(*) as TOTAL_EVENTS,
+  SUM(CASE WHEN RECORD_CONTENT:level::STRING = 'ERROR' THEN 1 ELSE 0 END) as ERRORS,
+  SUM(CASE WHEN RECORD_CONTENT:level::STRING = 'WARN' THEN 1 ELSE 0 END) as WARNINGS,
+  SUM(CASE WHEN RECORD_CONTENT:level::STRING = 'INFO' THEN 1 ELSE 0 END) as INFO_LOGS
+FROM "APPLICATION-LOGS"
+WHERE INGESTION_TIME >= DATEADD('hour', -1, CURRENT_TIMESTAMP())
+GROUP BY TIME_BUCKET
+ORDER BY TIME_BUCKET DESC
+LIMIT 20;
+
+-- 5. Hourly Event Distribution (Last 24 Hours)
+SELECT 
+  DATE_TRUNC('hour', INGESTION_TIME) as HOUR_BUCKET,
+  COUNT(*) as EVENT_COUNT,
+  COUNT(DISTINCT RECORD_CONTENT:service::STRING) as ACTIVE_SERVICES,
+  COUNT(DISTINCT RECORD_CONTENT:host::STRING) as ACTIVE_HOSTS
+FROM "APPLICATION-LOGS"
+WHERE INGESTION_TIME >= DATEADD('day', -1, CURRENT_TIMESTAMP())
+GROUP BY HOUR_BUCKET
+ORDER BY HOUR_BUCKET DESC;
+
+-- 6. Peak Traffic Analysis
+SELECT 
+  HOUR(INGESTION_TIME) as HOUR_OF_DAY,
+  COUNT(*) as EVENT_COUNT,
+  AVG(RECORD_CONTENT:duration_ms::INTEGER) as AVG_DURATION_MS
+FROM "APPLICATION-LOGS"
+WHERE INGESTION_TIME >= DATEADD('day', -7, CURRENT_TIMESTAMP())
+GROUP BY HOUR_OF_DAY
+ORDER BY HOUR_OF_DAY;
+
+/*****************************************************
+ * PERFORMANCE ANALYTICS
+ *****************************************************/
+
+-- 7. Slowest Requests
+SELECT 
+  RECORD_CONTENT:service::STRING as SERVICE,
+  RECORD_CONTENT:request_id::STRING as REQUEST_ID,
+  RECORD_CONTENT:duration_ms::INTEGER as DURATION_MS,
+  RECORD_CONTENT:message::STRING as MESSAGE,
+  RECORD_CONTENT:status_code::INTEGER as STATUS_CODE,
+  INGESTION_TIME
+FROM "APPLICATION-LOGS"
+WHERE RECORD_CONTENT:duration_ms IS NOT NULL
+ORDER BY DURATION_MS DESC
+LIMIT 20;
+
+-- 8. Performance Percentiles by Service
+SELECT 
+  RECORD_CONTENT:service::STRING as SERVICE,
+  COUNT(*) as REQUEST_COUNT,
+  AVG(RECORD_CONTENT:duration_ms::INTEGER) as AVG_DURATION_MS,
+  MIN(RECORD_CONTENT:duration_ms::INTEGER) as MIN_DURATION_MS,
+  MAX(RECORD_CONTENT:duration_ms::INTEGER) as MAX_DURATION_MS,
+  PERCENTILE_CONT(0.50) WITHIN GROUP (ORDER BY RECORD_CONTENT:duration_ms::INTEGER) as P50_MS,
+  PERCENTILE_CONT(0.90) WITHIN GROUP (ORDER BY RECORD_CONTENT:duration_ms::INTEGER) as P90_MS,
+  PERCENTILE_CONT(0.95) WITHIN GROUP (ORDER BY RECORD_CONTENT:duration_ms::INTEGER) as P95_MS,
+  PERCENTILE_CONT(0.99) WITHIN GROUP (ORDER BY RECORD_CONTENT:duration_ms::INTEGER) as P99_MS
+FROM "APPLICATION-LOGS"
+WHERE RECORD_CONTENT:duration_ms IS NOT NULL
+GROUP BY SERVICE
+ORDER BY AVG_DURATION_MS DESC;
+
+-- 9. Response Code Distribution
+SELECT 
+  RECORD_CONTENT:status_code::INTEGER as STATUS_CODE,
+  RECORD_CONTENT:service::STRING as SERVICE,
+  COUNT(*) as REQUEST_COUNT,
+  ROUND(COUNT(*) * 100.0 / SUM(COUNT(*)) OVER (PARTITION BY SERVICE), 2) as PCT_OF_SERVICE
+FROM "APPLICATION-LOGS"
+WHERE RECORD_CONTENT:status_code IS NOT NULL
+GROUP BY STATUS_CODE, SERVICE
+ORDER BY SERVICE, REQUEST_COUNT DESC;
+
+/*****************************************************
+ * ERROR ANALYSIS
+ *****************************************************/
+
+-- 10. Error Timeline (Last 24 Hours)
+SELECT 
+  DATE_TRUNC('hour', INGESTION_TIME) as HOUR_BUCKET,
+  RECORD_CONTENT:service::STRING as SERVICE,
+  COUNT(*) as ERROR_COUNT,
+  ARRAY_AGG(DISTINCT RECORD_CONTENT:message::STRING) as ERROR_MESSAGES
+FROM "APPLICATION-LOGS"
+WHERE RECORD_CONTENT:level::STRING = 'ERROR'
+  AND INGESTION_TIME >= DATEADD('day', -1, CURRENT_TIMESTAMP())
+GROUP BY HOUR_BUCKET, SERVICE
+ORDER BY HOUR_BUCKET DESC, ERROR_COUNT DESC;
+
+-- 11. Error Correlation (Errors occurring together)
+WITH error_timeline AS (
+  SELECT 
+    DATE_TRUNC('minute', INGESTION_TIME) as TIME_WINDOW,
+    RECORD_CONTENT:service::STRING as SERVICE,
+    RECORD_CONTENT:message::STRING as ERROR_MESSAGE
+  FROM "APPLICATION-LOGS"
+  WHERE RECORD_CONTENT:level::STRING = 'ERROR'
+    AND INGESTION_TIME >= DATEADD('hour', -24, CURRENT_TIMESTAMP())
+)
+SELECT 
+  e1.SERVICE as SERVICE_1,
+  e2.SERVICE as SERVICE_2,
+  e1.ERROR_MESSAGE as ERROR_1,
+  e2.ERROR_MESSAGE as ERROR_2,
+  COUNT(*) as CO_OCCURRENCE_COUNT
+FROM error_timeline e1
+JOIN error_timeline e2 
+  ON e1.TIME_WINDOW = e2.TIME_WINDOW 
+  AND e1.SERVICE < e2.SERVICE  -- Avoid duplicates
+GROUP BY SERVICE_1, SERVICE_2, ERROR_1, ERROR_2
+HAVING COUNT(*) >= 3
+ORDER BY CO_OCCURRENCE_COUNT DESC
+LIMIT 20;
+
+-- 12. Error Rate Trend
+SELECT 
+  DATE_TRUNC('hour', INGESTION_TIME) as HOUR_BUCKET,
+  COUNT(*) as TOTAL_EVENTS,
+  SUM(CASE WHEN RECORD_CONTENT:level::STRING = 'ERROR' THEN 1 ELSE 0 END) as ERROR_COUNT,
+  ROUND(ERROR_COUNT * 100.0 / TOTAL_EVENTS, 2) as ERROR_RATE_PCT
+FROM "APPLICATION-LOGS"
+WHERE INGESTION_TIME >= DATEADD('day', -7, CURRENT_TIMESTAMP())
+GROUP BY HOUR_BUCKET
+ORDER BY HOUR_BUCKET DESC;
+
+/*****************************************************
+ * HOST AND SERVICE ANALYSIS
+ *****************************************************/
+
+-- 13. Activity by Host
+SELECT 
+  RECORD_CONTENT:host::STRING as HOST_NAME,
+  RECORD_CONTENT:service::STRING as SERVICE,
+  COUNT(*) as EVENT_COUNT,
+  SUM(CASE WHEN RECORD_CONTENT:level::STRING = 'ERROR' THEN 1 ELSE 0 END) as ERROR_COUNT,
+  MIN(INGESTION_TIME) as FIRST_SEEN,
+  MAX(INGESTION_TIME) as LAST_SEEN
+FROM "APPLICATION-LOGS"
+GROUP BY HOST_NAME, SERVICE
+ORDER BY EVENT_COUNT DESC
+LIMIT 20;
+
+-- 14. Service Dependencies (Based on Request ID correlation)
+SELECT 
+  s1.SERVICE as SOURCE_SERVICE,
+  s2.SERVICE as TARGET_SERVICE,
+  COUNT(DISTINCT s1.REQUEST_ID) as SHARED_REQUEST_COUNT
+FROM (
+  SELECT 
+    RECORD_CONTENT:service::STRING as SERVICE,
+    RECORD_CONTENT:request_id::STRING as REQUEST_ID
+  FROM "APPLICATION-LOGS"
+  WHERE RECORD_CONTENT:request_id IS NOT NULL
+) s1
+JOIN (
+  SELECT 
+    RECORD_CONTENT:service::STRING as SERVICE,
+    RECORD_CONTENT:request_id::STRING as REQUEST_ID
+  FROM "APPLICATION-LOGS"
+  WHERE RECORD_CONTENT:request_id IS NOT NULL
+) s2 
+  ON s1.REQUEST_ID = s2.REQUEST_ID
+  AND s1.SERVICE < s2.SERVICE
+GROUP BY SOURCE_SERVICE, TARGET_SERVICE
+HAVING SHARED_REQUEST_COUNT >= 5
+ORDER BY SHARED_REQUEST_COUNT DESC;
+
+/*****************************************************
+ * FULL-TEXT SEARCH
+ *****************************************************/
+
+-- 15. Search Logs by Keywords
+SELECT 
+  INGESTION_TIME,
+  RECORD_CONTENT:level::STRING as LEVEL,
+  RECORD_CONTENT:service::STRING as SERVICE,
+  RECORD_CONTENT:message::STRING as MESSAGE,
+  RECORD_CONTENT:error::STRING as ERROR_TYPE
+FROM "APPLICATION-LOGS"
+WHERE 
+  RECORD_CONTENT:message::STRING ILIKE '%timeout%'
+  OR RECORD_CONTENT:message::STRING ILIKE '%connection%'
+  OR RECORD_CONTENT:message::STRING ILIKE '%failed%'
+  OR RECORD_CONTENT:error::STRING ILIKE '%timeout%'
+ORDER BY INGESTION_TIME DESC
+LIMIT 50;
+
+-- 16. Find Logs for Specific Request ID
+SELECT 
+  INGESTION_TIME,
+  RECORD_CONTENT:service::STRING as SERVICE,
+  RECORD_CONTENT:level::STRING as LEVEL,
+  RECORD_CONTENT:message::STRING as MESSAGE,
+  RECORD_CONTENT:duration_ms::INTEGER as DURATION_MS
+FROM "APPLICATION-LOGS"
+WHERE RECORD_CONTENT:request_id::STRING = 'YOUR-REQUEST-ID'  -- Replace with actual request ID
+ORDER BY INGESTION_TIME;
+
+/*****************************************************
+ * CREATE USEFUL VIEWS
+ *****************************************************/
+
+-- 17. Create a flattened view for easier querying
+CREATE OR REPLACE VIEW APPLICATION_LOGS_PARSED AS
+SELECT 
+  -- Kafka metadata
+  RECORD_METADATA:topic::STRING as TOPIC,
+  RECORD_METADATA:partition::INTEGER as PARTITION,
+  RECORD_METADATA:offset::INTEGER as KAFKA_OFFSET,
+  RECORD_METADATA:timestamp::TIMESTAMP as KAFKA_TIMESTAMP,
+  
+  -- Log content
+  RECORD_CONTENT:timestamp::TIMESTAMP as LOG_TIMESTAMP,
+  RECORD_CONTENT:level::STRING as LOG_LEVEL,
+  RECORD_CONTENT:service::STRING as SERVICE,
+  RECORD_CONTENT:host::STRING as HOST,
+  RECORD_CONTENT:request_id::STRING as REQUEST_ID,
+  RECORD_CONTENT:message::STRING as MESSAGE,
+  RECORD_CONTENT:duration_ms::INTEGER as DURATION_MS,
+  RECORD_CONTENT:status_code::INTEGER as STATUS_CODE,
+  RECORD_CONTENT:error::STRING as ERROR_TYPE,
+  RECORD_CONTENT:user_id::STRING as USER_ID,
+  RECORD_CONTENT:ip_address::STRING as IP_ADDRESS,
+  
+  -- Ingestion metadata
+  INGESTION_TIME
+FROM "APPLICATION-LOGS";
+
+-- 18. Query the parsed view (much simpler!)
+SELECT 
+  SERVICE,
+  LOG_LEVEL,
+  COUNT(*) as EVENT_COUNT,
+  AVG(DURATION_MS) as AVG_DURATION
+FROM "APPLICATION-LOGS"_PARSED
+WHERE LOG_TIMESTAMP >= DATEADD('hour', -1, CURRENT_TIMESTAMP())
+GROUP BY SERVICE, LOG_LEVEL
+ORDER BY EVENT_COUNT DESC;
+
+-- 19. Create a view for recent errors
+CREATE OR REPLACE VIEW RECENT_ERRORS AS
+SELECT 
+  LOG_TIMESTAMP,
+  SERVICE,
+  HOST,
+  MESSAGE,
+  ERROR_TYPE,
+  REQUEST_ID,
+  INGESTION_TIME
+FROM "APPLICATION-LOGS"_PARSED
+WHERE LOG_LEVEL = 'ERROR'
+  AND LOG_TIMESTAMP >= DATEADD('day', -1, CURRENT_TIMESTAMP())
+ORDER BY LOG_TIMESTAMP DESC;
+
+-- Query recent errors
+SELECT * FROM RECENT_ERRORS LIMIT 20;
+
+/*****************************************************
+ * ADVANCED ANALYTICS
+ *****************************************************/
+
+-- 20. Anomaly Detection (Spike in errors)
+WITH hourly_stats AS (
+  SELECT 
+    DATE_TRUNC('hour', INGESTION_TIME) as HOUR_BUCKET,
+    COUNT(*) as TOTAL_EVENTS,
+    SUM(CASE WHEN RECORD_CONTENT:level::STRING = 'ERROR' THEN 1 ELSE 0 END) as ERROR_COUNT
+  FROM "APPLICATION-LOGS"
+  WHERE INGESTION_TIME >= DATEADD('day', -7, CURRENT_TIMESTAMP())
+  GROUP BY HOUR_BUCKET
+),
+stats_with_avg AS (
+  SELECT 
+    HOUR_BUCKET,
+    TOTAL_EVENTS,
+    ERROR_COUNT,
+    AVG(ERROR_COUNT) OVER (ORDER BY HOUR_BUCKET ROWS BETWEEN 24 PRECEDING AND 1 PRECEDING) as AVG_ERRORS_24H,
+    STDDEV(ERROR_COUNT) OVER (ORDER BY HOUR_BUCKET ROWS BETWEEN 24 PRECEDING AND 1 PRECEDING) as STDDEV_ERRORS_24H
+  FROM hourly_stats
+)
+SELECT 
+  HOUR_BUCKET,
+  ERROR_COUNT,
+  AVG_ERRORS_24H,
+  CASE 
+    WHEN ERROR_COUNT > (AVG_ERRORS_24H + 2 * STDDEV_ERRORS_24H) THEN '⚠️ ANOMALY: High Error Count'
+    ELSE 'Normal'
+  END as ANOMALY_STATUS
+FROM stats_with_avg
+WHERE HOUR_BUCKET >= DATEADD('day', -2, CURRENT_TIMESTAMP())
+ORDER BY HOUR_BUCKET DESC;
+
+-- ============================================================================
+-- Analytics Complete!
+-- 
+-- These queries demonstrate the power of SQL analytics on streaming log data.
+-- You can:
+-- 
+-- - Monitor real-time service health
+-- - Track performance metrics and SLIs
+-- - Investigate incidents and errors
+-- - Detect anomalies and patterns
+-- - Correlate events across services
+-- 
+-- Try customizing these queries for your specific use case!
+-- ============================================================================
+

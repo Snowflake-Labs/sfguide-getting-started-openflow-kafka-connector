@@ -26,6 +26,13 @@ Usage:
     export KAFKA_SASL_USERNAME=YOUR_API_KEY
     export KAFKA_SASL_PASSWORD=YOUR_API_SECRET
     python generate_logs.py --test-connection
+
+Alternative: Use rpk (Redpanda CLI) for simpler Kafka operations:
+    # Produce from sample file
+    rpk topic produce application-logs --brokers localhost:9092 < sample_logs.json
+    
+    # Or interactive produce
+    rpk topic produce application-logs --brokers localhost:9092
 """
 
 import argparse
@@ -35,6 +42,14 @@ import random
 import sys
 from datetime import datetime, timezone
 from time import sleep
+
+from dotenv import load_dotenv, find_dotenv
+try:
+    load_dotenv(find_dotenv())
+except Exception as e:
+    print(f"Error loading .env file: {e}")
+    sys.exit(1)
+
 
 try:
     from kafka import KafkaProducer
@@ -127,8 +142,17 @@ def weighted_choice(choices):
     return random.choices(items, weights=weights)[0]
 
 
-def generate_log_event():
-    """Generate a single log event."""
+def generate_log_event(evolved=False):
+    """Generate a single log event with consistent schema.
+    
+    Args:
+        evolved: If True, add evolved fields for schema evolution demonstration
+    
+    Note:
+        This function now generates a consistent schema where all fields are always
+        present (set to None if not applicable). This ensures predictable table
+        schemas in Snowflake and accurate column counts for the quickstart demo.
+    """
     # Select log level based on distribution
     level = weighted_choice(LOG_LEVELS)
     
@@ -136,13 +160,20 @@ def generate_log_event():
     service = random.choice(SERVICES)
     host = random.choice(HOSTS[service])
     
-    # Generate base log structure
+    # Generate base log structure with ALL base fields (11 total)
+    # Always initialize all base schema fields to ensure consistent schema
     log = {
         "timestamp": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
         "level": level,
         "service": service,
         "host": host,
-        "request_id": f"req-{random.randbytes(4).hex()}"
+        "request_id": f"req-{random.randbytes(4).hex()}",
+        "message": None,
+        "duration_ms": None,
+        "status_code": None,
+        "user_id": None,
+        "amount": None,
+        "error": None
     }
     
     # Add level-specific content
@@ -151,19 +182,23 @@ def generate_log_event():
         log["duration_ms"] = random.randint(10, 500)
         log["status_code"] = random.choice(STATUS_CODES["INFO"])
         
-        # Add optional fields
+        # Add user_id conditionally but consistently
         if random.random() < 0.7:  # 70% chance of user_id
             log["user_id"] = f"user-{random.randint(10000, 99999)}"
-        if random.random() < 0.5 and service == "web-api":  # 50% chance of IP for web-api
-            log["ip_address"] = f"192.168.{random.randint(1,255)}.{random.randint(1,255)}"
-        if random.random() < 0.3 and service == "payment-service":  # Payment amounts
+        
+        # Add amount for payment services
+        if random.random() < 0.3 and service == "payment-service":
             log["amount"] = round(random.uniform(9.99, 999.99), 2)
             
     elif level == "WARN":
         log["message"] = random.choice(WARN_MESSAGES)
         log["status_code"] = random.choice(STATUS_CODES["WARN"])
+        
+        # Duration_ms may or may not be present for WARN
         if random.random() < 0.5:
             log["duration_ms"] = random.randint(500, 2000)
+        
+        # User_id may or may not be present for WARN
         if random.random() < 0.4:
             log["user_id"] = f"user-{random.randint(10000, 99999)}"
             
@@ -173,6 +208,126 @@ def generate_log_event():
         log["error"] = error_type
         log["status_code"] = random.choice(STATUS_CODES["ERROR"])
         log["duration_ms"] = random.randint(1000, 10000)
+    
+    # Add evolved fields for schema evolution demonstration
+    # Initialize ALL evolved fields (26 total) to ensure consistent schema
+    if evolved:
+        # Initialize all evolved fields as None first
+        evolved_fields = {
+            "region": None,
+            "trace_id": None,
+            "auth_method": None,
+            "provider": None,
+            "session_duration": None,
+            "currency": None,
+            "payment_method": None,
+            "retry_count": None,
+            "file_size_bytes": None,
+            "content_type": None,
+            "memory_percent": None,
+            "available_mb": None,
+            "disk_usage_percent": None,
+            "available_gb": None,
+            "query_params": None,
+            "result_count": None,
+            "recipient": None,
+            "smtp_code": None,
+            "metrics_count": None,
+            "time_window": None,
+            "product_id": None,
+            "rating": None,
+            "version": None,
+            "status": None,
+            "test": None,
+            "validation_errors": None
+        }
+        
+        # Add region to most logs
+        if random.random() < 0.8:
+            regions = ["us-east-1", "us-west-2", "us-central-1", "eu-west-1", "eu-central-1", "ap-south-1", "ap-northeast-1"]
+            evolved_fields["region"] = random.choice(regions)
+        
+        # Add trace_id occasionally
+        if random.random() < 0.3:
+            evolved_fields["trace_id"] = f"trace-{random.randbytes(8).hex()}"
+        
+        # Add auth-specific extended fields (higher probability for demo)
+        if service == "auth-service" and level == "INFO":
+            if random.random() < 0.9:  # Increased from 0.6 to ensure demo queries return data
+                evolved_fields["auth_method"] = random.choice(["oauth2", "saml", "basic", "api_key"])
+                evolved_fields["provider"] = random.choice(["google", "okta", "azure", "aws"])
+                if random.random() < 0.7:  # Increased from 0.5
+                    evolved_fields["session_duration"] = random.choice([1800, 3600, 7200])
+        
+        # Add payment-specific extended fields (higher probability for demo)
+        if service == "payment-service":
+            if log.get("amount") is not None or random.random() < 0.6:  # Ensure payment logs get these fields
+                if log.get("amount") is None:
+                    log["amount"] = round(random.uniform(9.99, 999.99), 2)
+                if random.random() < 0.9:  # Increased from 0.7 to ensure demo queries return data
+                    evolved_fields["currency"] = random.choice(["USD", "EUR", "GBP", "JPY"])
+                    evolved_fields["payment_method"] = random.choice(["credit_card", "debit_card", "paypal", "bank_transfer"])
+        
+        # Add retry count for errors
+        if level == "ERROR" and random.random() < 0.5:
+            evolved_fields["retry_count"] = random.randint(1, 5)
+        
+        # Add file upload fields for web-api (more scenarios)
+        if service == "web-api":
+            # Either the message contains "upload" OR randomly add for demo purposes
+            if "upload" in log.get("message", "").lower() or random.random() < 0.3:
+                evolved_fields["file_size_bytes"] = random.randint(10240, 10485760)  # 10KB to 10MB
+                evolved_fields["content_type"] = random.choice(["image/jpeg", "image/png", "application/pdf", "text/csv"])
+        
+        # Add system metrics for warnings
+        if level == "WARN" and ("memory" in log["message"].lower() or "disk" in log["message"].lower()):
+            if "memory" in log["message"].lower():
+                evolved_fields["memory_percent"] = round(random.uniform(80, 95), 1)
+                evolved_fields["available_mb"] = random.randint(256, 1024)
+            if "disk" in log["message"].lower():
+                evolved_fields["disk_usage_percent"] = random.randint(85, 98)
+                evolved_fields["available_gb"] = random.randint(10, 100)
+        
+        # Add query params for search/web services
+        if service in ["web-api", "search-service"] and random.random() < 0.3:
+            evolved_fields["query_params"] = {"category": random.choice(["electronics", "books", "clothing"]), "limit": random.choice([10, 25, 50, 100])}
+            evolved_fields["result_count"] = random.randint(0, evolved_fields["query_params"]["limit"])
+        
+        # Add notification-specific fields
+        if service == "notification-service" and level == "ERROR":
+            if random.random() < 0.5:
+                evolved_fields["recipient"] = f"user{random.randint(1000, 9999)}@example.com"
+                evolved_fields["smtp_code"] = random.choice([550, 554, 421])
+        
+        # Add analytics metrics
+        if service == "analytics-service" and "metrics" in log.get("message", "").lower():
+            if random.random() < 0.6:
+                evolved_fields["metrics_count"] = random.randint(100, 5000)
+                evolved_fields["time_window"] = random.choice(["1h", "4h", "24h"])
+        
+        # Add web-api specific fields occasionally
+        if service == "web-api" and random.random() < 0.2:
+            evolved_fields["product_id"] = f"prod-{random.randint(10000, 99999)}"
+            evolved_fields["rating"] = random.randint(1, 5)
+        
+        # Add version info occasionally
+        if random.random() < 0.15:
+            evolved_fields["version"] = random.choice(["1.0", "1.5", "2.0", "2.1"])
+        
+        # Add status field occasionally
+        if random.random() < 0.1:
+            evolved_fields["status"] = random.choice(["healthy", "degraded", "unhealthy"])
+        
+        # Add test flag occasionally
+        if random.random() < 0.05:
+            evolved_fields["test"] = True
+        
+        # Add validation errors for some ERROR logs
+        if level == "ERROR" and "validation" in log.get("message", "").lower():
+            evolved_fields["validation_errors"] = ["missing_field", "invalid_format"]
+        
+        # Merge evolved fields into log
+        log.update(evolved_fields)
     
     return log
 
@@ -246,42 +401,51 @@ def test_connection(bootstrap_servers, topic, security_protocol='PLAINTEXT', sas
     # Test 2: Check cluster metadata
     print(f"\n[2/4] Fetching cluster metadata...")
     try:
-        metadata = producer._metadata
-        # Force metadata refresh
-        producer._sender._metadata.request_update()
-        cluster_metadata = producer._metadata.fetch()
+        # Give the producer a moment to fetch metadata
+        sleep(1)
         
-        if cluster_metadata:
-            brokers = cluster_metadata.brokers()
-            print(f"      ✓ Connected to {len(brokers)} broker(s):")
-            for broker in brokers:
-                print(f"        - {broker.host}:{broker.port} (node {broker.nodeId})")
+        # Access cluster metadata through the producer
+        cluster = producer._metadata._partitions
+        
+        if cluster:
+            # Get unique brokers from metadata
+            brokers_found = set()
+            for topic_partitions in cluster.values():
+                for partition_metadata in topic_partitions.values():
+                    if hasattr(partition_metadata, 'leader'):
+                        brokers_found.add(partition_metadata.leader)
+            
+            if brokers_found:
+                print(f"      ✓ Cluster metadata retrieved")
+                print(f"      ✓ Found {len(brokers_found)} broker node(s): {sorted(brokers_found)}")
+            else:
+                print(f"      ✓ Connected to cluster (metadata available)")
         else:
-            print("      ⚠ Could not retrieve cluster metadata")
+            print(f"      ✓ Connected to cluster")
+            
     except Exception as e:
-        print(f"      ⚠ Could not fetch metadata: {e}")
+        print(f"      ⚠ Could not fetch detailed metadata: {e}")
+        print(f"      Note: This is not critical - connection was successful")
     
     # Test 3: Check topic accessibility
     print(f"\n[3/4] Checking topic accessibility...")
     print(f"      Topic: {topic}")
     
     try:
-        # Get list of topics
-        topics = producer._metadata.topics()
+        # Use the public API to get partitions for the topic
+        # This will return None if topic doesn't exist, or a set of partition IDs if it does
+        partitions = producer.partitions_for(topic)
         
-        if topic in topics:
+        if partitions is not None:
             print(f"      ✓ Topic '{topic}' exists and is accessible")
-            
-            # Get partition info
-            partitions = producer.partitions_for(topic)
-            if partitions:
-                print(f"      ✓ Topic has {len(partitions)} partition(s): {sorted(partitions)}")
+            print(f"      ✓ Topic has {len(partitions)} partition(s): {sorted(partitions)}")
         else:
             print(f"      ⚠ Topic '{topic}' not found in cluster")
-            print(f"      Note: Topic may be auto-created on first write (if enabled)")
-            print(f"      Available topics: {list(topics)[:5]}{'...' if len(topics) > 5 else ''}")
+            print(f"      Note: Topic may be auto-created on first write (if broker allows auto-creation)")
     except Exception as e:
         print(f"      ⚠ Could not check topic: {e}")
+        import traceback
+        traceback.print_exc()
     
     # Test 4: Test write permissions (send a test message)
     print(f"\n[4/4] Testing write permissions...")
@@ -292,13 +456,25 @@ def test_connection(bootstrap_servers, topic, security_protocol='PLAINTEXT', sas
             "timestamp": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
         }
         
+        print(f"      Sending test message to topic '{topic}'...")
         future = producer.send(topic, key="test", value=test_log)
-        record_metadata = future.get(timeout=10)
         
-        print(f"      ✓ Successfully sent test message")
-        print(f"      ✓ Written to partition {record_metadata.partition} at offset {record_metadata.offset}")
+        # Wait for the message to be sent
+        try:
+            record_metadata = future.get(timeout=30)
+            print(f"      ✓ Successfully sent test message")
+            print(f"      ✓ Written to partition {record_metadata.partition} at offset {record_metadata.offset}")
+        except Exception as send_error:
+            print(f"      ✗ Failed to send test message: {send_error}")
+            import traceback
+            traceback.print_exc()
+            producer.close()
+            return False
+            
     except Exception as e:
-        print(f"      ✗ Failed to send test message: {e}")
+        print(f"      ✗ Error preparing test message: {e}")
+        import traceback
+        traceback.print_exc()
         producer.close()
         return False
     
@@ -317,15 +493,16 @@ def test_connection(bootstrap_servers, topic, security_protocol='PLAINTEXT', sas
     return True
 
 
-def produce_logs(producer, topic, count, delay=0):
+def produce_logs(producer, topic, count, delay=0, evolved=False):
     """Produce log events to Kafka topic."""
-    print(f"Producing {count} log events to topic '{topic}'...")
+    mode = "evolved schema" if evolved else "base schema"
+    print(f"Producing {count} log events ({mode}) to topic '{topic}'...")
     
     for i in range(count):
-        log = generate_log_event()
+        log = generate_log_event(evolved=evolved)
         
         # Use service as message key for partition distribution
-        key = log["service"]
+        key = log.get("service", "test")
         
         try:
             # Send to Kafka
@@ -346,7 +523,7 @@ def produce_logs(producer, topic, count, delay=0):
     
     # Flush to ensure all messages are sent
     producer.flush()
-    print(f"✓ Successfully produced {count} log events")
+    print(f"✓ Successfully produced {count} log events ({mode})")
 
 
 def main():
@@ -436,6 +613,11 @@ Environment Variables:
         action='store_true',
         help='Test Kafka connection and exit (no logs produced)'
     )
+    parser.add_argument(
+        '--evolved',
+        action='store_true',
+        help='Generate logs with evolved fields for schema evolution demonstration'
+    )
     
     args = parser.parse_args()
     
@@ -474,12 +656,12 @@ Environment Variables:
             iteration = 1
             while True:
                 print(f"\n--- Iteration {iteration} ---")
-                produce_logs(producer, args.topic, args.count, args.delay)
+                produce_logs(producer, args.topic, args.count, args.delay, args.evolved)
                 print("Sleeping 5 seconds before next batch...")
                 sleep(5)
                 iteration += 1
         else:
-            produce_logs(producer, args.topic, args.count, args.delay)
+            produce_logs(producer, args.topic, args.count, args.delay, args.evolved)
             
     except KeyboardInterrupt:
         print("\n\nStopped by user (Ctrl+C)")

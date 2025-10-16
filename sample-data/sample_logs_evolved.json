@@ -1,0 +1,206 @@
+{
+    "timestamp": "2025-10-15T10:16:01.234Z",
+    "level": "INFO",
+    "service": "inventory-service",
+    "host": "inventory-server-01",
+    "request_id": "req-g4h5i6j7",
+    "message": "Inventory updated successfully",
+    "duration_ms": 220,
+    "status_code": 200,
+    "user_id": "user-30303",
+    "region": "us-west-2",
+    "trace_id": "trace-abc123def456"
+}
+{
+    "timestamp": "2025-10-15T10:16:02.567Z",
+    "level": "ERROR",
+    "service": "payment-service",
+    "host": "payment-server-01",
+    "request_id": "req-k8l9m0n1",
+    "message": "Service unavailable",
+    "error": "ServiceUnavailable",
+    "status_code": 503,
+    "duration_ms": 8000,
+    "retry_count": 3,
+    "region": "us-east-1"
+}
+{
+    "timestamp": "2025-10-15T10:16:04.890Z",
+    "level": "INFO",
+    "service": "web-api",
+    "host": "api-server-02",
+    "request_id": "req-o2p3q4r5",
+    "message": "File uploaded successfully",
+    "duration_ms": 450,
+    "status_code": 201,
+    "user_id": "user-40404",
+    "file_size_bytes": 1048576,
+    "content_type": "image/jpeg",
+    "region": "us-west-1"
+}
+{
+    "timestamp": "2025-10-15T10:16:06.123Z",
+    "level": "WARN",
+    "service": "analytics-service",
+    "host": "analytics-server-01",
+    "request_id": "req-s6t7u8v9",
+    "message": "Memory usage above 80%",
+    "status_code": 200,
+    "duration_ms": 950,
+    "memory_percent": 84.5,
+    "available_mb": 512,
+    "region": "eu-west-1"
+}
+{
+    "timestamp": "2025-10-15T10:16:07.456Z",
+    "level": "INFO",
+    "service": "auth-service",
+    "host": "auth-server-01",
+    "request_id": "req-w0x1y2z3",
+    "message": "User authentication successful",
+    "duration_ms": 95,
+    "status_code": 200,
+    "user_id": "user-50505",
+    "auth_method": "oauth2",
+    "provider": "google",
+    "region": "us-central-1"
+}
+{
+    "timestamp": "2025-10-15T10:16:08.789Z",
+    "level": "ERROR",
+    "service": "inventory-service",
+    "host": "inventory-server-02",
+    "request_id": "req-a4b5c6d7",
+    "message": "Invalid input data",
+    "error": "ValidationError",
+    "status_code": 500,
+    "duration_ms": 3600,
+    "validation_errors": [
+        "missing_sku",
+        "invalid_quantity"
+    ],
+    "region": "ap-south-1"
+}
+{
+    "timestamp": "2025-10-15T10:16:10.012Z",
+    "level": "INFO",
+    "service": "payment-service",
+    "host": "payment-server-02",
+    "request_id": "req-e8f9g0h1",
+    "message": "Payment processed",
+    "duration_ms": 315,
+    "status_code": 200,
+    "user_id": "user-60606",
+    "amount": 149.95,
+    "currency": "USD",
+    "payment_method": "credit_card",
+    "region": "us-east-1"
+}
+{
+    "timestamp": "2025-10-15T10:16:11.345Z",
+    "level": "WARN",
+    "service": "search-service",
+    "host": "search-server-01",
+    "request_id": "req-i2j3k4l5",
+    "message": "Disk space running low",
+    "status_code": 200,
+    "duration_ms": 780,
+    "disk_usage_percent": 92,
+    "available_gb": 45,
+    "region": "eu-central-1"
+}
+{
+    "timestamp": "2025-10-15T10:16:12.678Z",
+    "level": "INFO",
+    "service": "web-api",
+    "host": "api-server-01",
+    "request_id": "req-m6n7o8p9",
+    "message": "GET /api/v1/products",
+    "duration_ms": 42,
+    "status_code": 200,
+    "user_id": "user-70707",
+    "query_params": {
+        "category": "electronics",
+        "limit": 50
+    },
+    "result_count": 47,
+    "region": "us-west-2"
+}
+{
+    "test": true,
+    "message": "Health check - extended schema test",
+    "timestamp": "2025-10-15T10:16:13.500Z",
+    "status": "healthy",
+    "version": "2.0"
+}
+{
+    "timestamp": "2025-10-15T10:16:15.234Z",
+    "level": "INFO",
+    "service": "web-api",
+    "host": "api-server-02",
+    "request_id": "req-n7o8p9q0",
+    "message": "POST /api/v1/reviews",
+    "duration_ms": 125,
+    "status_code": 201,
+    "user_id": "user-80808",
+    "product_id": "prod-12345",
+    "rating": 5,
+    "region": "ap-northeast-1"
+}
+{
+    "timestamp": "2025-10-15T10:16:17.567Z",
+    "level": "ERROR",
+    "service": "notification-service",
+    "host": "notif-server-01",
+    "request_id": "req-r1s2t3u4",
+    "message": "Email delivery failed",
+    "error": "SMTPException",
+    "status_code": 500,
+    "duration_ms": 5500,
+    "recipient": "user@example.com",
+    "smtp_code": 554,
+    "region": "us-east-2"
+}
+{
+    "timestamp": "2025-10-15T10:16:19.890Z",
+    "level": "INFO",
+    "service": "analytics-service",
+    "host": "analytics-server-01",
+    "request_id": "req-v5w6x7y8",
+    "message": "Real-time metrics updated",
+    "duration_ms": 280,
+    "status_code": 200,
+    "metrics_count": 1547,
+    "time_window": "1h",
+    "region": "eu-west-2"
+}
+{
+    "timestamp": "2025-10-15T10:16:21.123Z",
+    "level": "INFO",
+    "service": "payment-service",
+    "host": "payment-server-01",
+    "request_id": "req-z9a0b1c2",
+    "message": "Payment processed",
+    "duration_ms": 198,
+    "status_code": 200,
+    "user_id": "user-90909",
+    "amount": 249.99,
+    "currency": "EUR",
+    "payment_method": "paypal",
+    "region": "eu-west-1"
+}
+{
+    "timestamp": "2025-10-15T10:16:23.456Z",
+    "level": "INFO",
+    "service": "auth-service",
+    "host": "auth-server-02",
+    "request_id": "req-d3e4f5g6",
+    "message": "User authentication successful",
+    "duration_ms": 110,
+    "status_code": 200,
+    "user_id": "user-11223",
+    "auth_method": "saml",
+    "provider": "okta",
+    "session_duration": 3600,
+    "region": "us-central-1"
+}
