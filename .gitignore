@@ -1,0 +1,4 @@
+*_SUMMARY.md
+*.pgpass
+.local
+.env
