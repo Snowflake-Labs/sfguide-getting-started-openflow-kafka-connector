@@ -1,0 +1,163 @@
+version: "3"
+
+# Snowflake Openflow Kafka Connector - Task Runner
+# Install Task: https://taskfile.dev/installation/
+# Usage: task <task-name>
+# Example: task generate-samples
+
+tasks:
+    # Setup and Installation Tasks
+    setup:
+        desc: "Install Python dependencies using uv"
+        cmds:
+            - uv sync
+        sources:
+            - pyproject.toml
+        generates:
+            - .venv/**/*
+
+    setup-pip:
+        desc: "Install Python dependencies using pip (alternative to uv)"
+        cmds:
+            - pip install -r requirements.txt || pip install kafka-python python-dotenv
+
+    # Sample File Generation (No Kafka Required)
+    generate-samples:
+        desc: "Generate sample log files (no Kafka required)"
+        cmds:
+            - python sample-data/generate_logs.py --count 50 --output sample-data/sample_logs.json
+            - python sample-data/generate_logs.py --count 80 --evolved --output sample-data/sample_logs_evolved.json
+        generates:
+            - sample-data/sample_logs.json
+            - sample-data/sample_logs_evolved.json
+
+    generate-base:
+        desc: "Generate base schema sample file (50 records)"
+        cmds:
+            - python sample-data/generate_logs.py --count 50 --output sample-data/sample_logs.json
+
+    generate-evolved:
+        desc: "Generate evolved schema sample file (80 records)"
+        cmds:
+            - python sample-data/generate_logs.py --count 80 --evolved --output sample-data/sample_logs_evolved.json
+
+    # Kafka Connection Testing
+    test-kafka:
+        desc: "Test Kafka connection and credentials"
+        cmds:
+            - python sample-data/generate_logs.py --test-connection
+
+    # Produce Logs to Kafka (Requires Kafka setup)
+    produce-base:
+        desc: "Produce base schema logs to Kafka (50 records)"
+        cmds:
+            - python sample-data/generate_logs.py --count 50
+
+    produce-evolved:
+        desc: "Produce evolved schema logs to Kafka (80 records)"
+        cmds:
+            - python sample-data/generate_logs.py --count 80 --evolved
+
+    produce-continuous:
+        desc: "Produce logs continuously for load testing (Ctrl+C to stop)"
+        cmds:
+            - python sample-data/generate_logs.py --count 10 --continuous
+
+    # RPK-based Production (Alternative Method)
+    rpk-produce-base:
+        desc: "Produce base logs using rpk (requires rpk profile setup)"
+        cmds:
+            - rpk topic produce application-logs -f '%v{json}\n' < sample-data/sample_logs.json
+
+    rpk-produce-evolved:
+        desc: "Produce evolved logs using rpk (requires rpk profile setup)"
+        cmds:
+            - rpk topic produce application-logs -f '%v{json}\n' < sample-data/sample_logs_evolved.json
+
+    # Kafka Topic Management (RPK)
+    kafka-topics:
+        desc: "List all Kafka topics"
+        cmds:
+            - rpk topic list
+
+    kafka-create-topic:
+        desc: "Create application-logs topic"
+        cmds:
+            - rpk topic create application-logs --partitions 3 --replicas 3
+
+    kafka-delete-topic:
+        desc: "Delete application-logs topic"
+        cmds:
+            - rpk topic delete application-logs
+        prompt: "Are you sure you want to delete the 'application-logs' topic?"
+
+    kafka-describe-topic:
+        desc: "Describe application-logs topic"
+        cmds:
+            - rpk topic describe application-logs
+
+    kafka-cluster-info:
+        desc: "Get Kafka cluster information"
+        cmds:
+            - rpk cluster info
+
+    # Complete Workflow Tasks
+    demo-phase1:
+        desc: "Run Phase 1 demo: Generate and produce base schema logs"
+        cmds:
+            - task: generate-base
+            - echo "✓ Base schema logs generated"
+            - task: produce-base
+            - echo "✓ Phase 1 complete - Check Snowflake for base schema table"
+
+    demo-phase2:
+        desc: "Run Phase 2 demo: Generate and produce evolved schema logs"
+        cmds:
+            - task: generate-evolved
+            - echo "✓ Evolved schema logs generated"
+            - task: produce-evolved
+            - echo "✓ Phase 2 complete - Check Snowflake for new columns"
+
+    demo-full:
+        desc: "Run complete demo (Phase 1 + Phase 2)"
+        cmds:
+            - task: demo-phase1
+            - echo "⏳ Waiting 5 seconds before Phase 2..."
+            - sleep 5
+            - task: demo-phase2
+
+    # Utility Tasks
+    clean:
+        desc: "Clean generated sample files"
+        cmds:
+            - rm -f sample-data/sample_logs.json sample-data/sample_logs_evolved.json
+            - echo "✓ Cleaned generated sample files"
+
+    clean-all:
+        desc: "Clean generated files and Python cache"
+        cmds:
+            - task: clean
+            - rm -rf .venv __pycache__ sample-data/__pycache__
+            - find . -type d -name "*.egg-info" -exec rm -rf {} + 2>/dev/null || true
+            - find . -type f -name "*.pyc" -delete
+            - echo "✓ Cleaned all generated files and caches"
+
+    list:
+        desc: "List all available tasks"
+        cmds:
+            - task --list
+
+    help:
+        desc: "Show help information"
+        cmds:
+            - echo "Snowflake Openflow Kafka Connector - Task Runner"
+            - echo ""
+            - echo "Common tasks:"
+            - echo "  task setup              - Install dependencies"
+            - echo "  task generate-samples   - Generate sample files (no Kafka)"
+            - echo "  task test-kafka         - Test Kafka connection"
+            - echo "  task produce-base       - Produce base logs to Kafka"
+            - echo "  task demo-full          - Run complete demo"
+            - echo ""
+            - echo "Run 'task list' to see all available tasks"
+            - echo "Run 'task <task-name> --help' for task details"
