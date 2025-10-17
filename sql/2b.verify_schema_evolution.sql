@@ -191,6 +191,10 @@ GROUP BY CONTENT_TYPE;
 | *****************************************************/
 
 -- Show system warnings with new resource monitoring fields
+-- Note: System metrics only appear in WARN logs with messages like 
+-- "Memory usage above 80%" or "Disk space running low"
+-- If this returns no results, produce more evolved logs:
+--   python generate_logs.py --count 100 --evolved
 SELECT 
   TIMESTAMP,
   SERVICE,
