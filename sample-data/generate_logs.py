@@ -33,6 +33,13 @@ Alternative: Use rpk (Redpanda CLI) for simpler Kafka operations:
     
     # Or interactive produce
     rpk topic produce application-logs --brokers localhost:9092
+
+Generate sample files for offline testing:
+    # Generate base schema sample file (50 records)
+    python generate_logs.py --count 50 --output sample_logs.json
+    
+    # Generate evolved schema sample file (30 records)
+    python generate_logs.py --count 30 --evolved --output sample_logs_evolved.json
 """
 
 import argparse
@@ -493,6 +500,29 @@ def test_connection(bootstrap_servers, topic, security_protocol='PLAINTEXT', sas
     return True
 
 
+def write_logs_to_file(output_file, count, evolved=False):
+    """Write log events to a JSONL file."""
+    mode = "evolved schema" if evolved else "base schema"
+    print(f"Generating {count} log events ({mode}) to file '{output_file}'...")
+    
+    try:
+        with open(output_file, 'w') as f:
+            for i in range(count):
+                log = generate_log_event(evolved=evolved)
+                f.write(json.dumps(log) + '\n')
+                
+                if (i + 1) % 10 == 0 or (i + 1) == count:
+                    print(f"  Generated {i + 1}/{count} events")
+        
+        print(f"✓ Successfully wrote {count} log events ({mode}) to {output_file}")
+        print(f"\nYou can now produce these logs to Kafka with:")
+        print(f"  rpk topic produce <topic-name> -f '%v{{json}}\\n' < {output_file}")
+        
+    except Exception as e:
+        print(f"Error writing to file: {e}")
+        sys.exit(1)
+
+
 def produce_logs(producer, topic, count, delay=0, evolved=False):
     """Produce log events to Kafka topic."""
     mode = "evolved schema" if evolved else "base schema"
@@ -532,6 +562,10 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
+  # Generate sample files (no Kafka required)
+  python generate_logs.py --count 50 --output sample_logs.json
+  python generate_logs.py --count 30 --evolved --output sample_logs_evolved.json
+  
   # Test connection to Kafka (recommended first step)
   python generate_logs.py --brokers localhost:9092 --topic application-logs --test-connection
   
@@ -618,17 +652,24 @@ Environment Variables:
         action='store_true',
         help='Generate logs with evolved fields for schema evolution demonstration'
     )
+    parser.add_argument(
+        '--output',
+        help='Output file path (JSONL format). If specified, writes to file instead of Kafka. Brokers and topic are not required when using --output.'
+    )
     
     args = parser.parse_args()
     
-    # Validate required arguments
-    if not args.brokers:
-        parser.error("--brokers is required (or set KAFKA_BROKERS environment variable)")
-    if not args.topic:
-        parser.error("--topic is required (or set KAFKA_TOPIC environment variable)")
+    # Validate required arguments (skip for --output mode)
+    if not args.output:
+        if not args.brokers:
+            parser.error("--brokers is required (or set KAFKA_BROKERS environment variable)")
+        if not args.topic:
+            parser.error("--topic is required (or set KAFKA_TOPIC environment variable)")
     
     # Handle connection test mode
     if args.test_connection:
+        if not args.brokers or not args.topic:
+            parser.error("--test-connection requires --brokers and --topic")
         success = test_connection(
             args.brokers, 
             args.topic, 
@@ -639,7 +680,12 @@ Environment Variables:
         )
         sys.exit(0 if success else 1)
     
-    # Create producer
+    # Handle file output mode
+    if args.output:
+        write_logs_to_file(args.output, args.count, args.evolved)
+        sys.exit(0)
+    
+    # Create producer for Kafka mode
     print(f"Connecting to Kafka brokers: {args.brokers}")
     producer = create_producer(
         args.brokers, 

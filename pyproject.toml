@@ -1,7 +1,7 @@
 [project]
 name = "sfguide-getting-started-openflow-kafka-connector"
 version = "0.1.0"
-description = "Add your description here"
+description = "Snowflake Openflow Kafka Connector Quickstart - Stream real-time logs from Kafka to Snowflake"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [

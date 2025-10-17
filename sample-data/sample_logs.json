@@ -1,271 +1,50 @@
-{
-    "timestamp": "2025-10-15T10:15:23.123Z",
-    "level": "INFO",
-    "service": "web-api",
-    "host": "api-server-01",
-    "request_id": "req-a1b2c3d4",
-    "message": "Request processed successfully",
-    "duration_ms": 145,
-    "status_code": 200,
-    "user_id": "user-12345"
-}
-{
-    "timestamp": "2025-10-15T10:15:24.456Z",
-    "level": "INFO",
-    "service": "auth-service",
-    "host": "auth-server-01",
-    "request_id": "req-d4e5f6a7",
-    "message": "User authentication successful",
-    "duration_ms": 120,
-    "status_code": 200,
-    "user_id": "user-67890"
-}
-{
-    "timestamp": "2025-10-15T10:15:25.789Z",
-    "level": "WARN",
-    "service": "db-service",
-    "host": "db-server-01",
-    "request_id": "req-g7h8i9b0",
-    "message": "Query execution took longer than expected",
-    "duration_ms": 1850,
-    "status_code": 200
-}
-{
-    "timestamp": "2025-10-15T10:15:26.012Z",
-    "level": "INFO",
-    "service": "web-api",
-    "host": "api-server-02",
-    "request_id": "req-j0k1l2c3",
-    "message": "GET /api/v1/products",
-    "duration_ms": 35,
-    "status_code": 200,
-    "user_id": "user-45678"
-}
-{
-    "timestamp": "2025-10-15T10:15:27.345Z",
-    "level": "ERROR",
-    "service": "auth-service",
-    "host": "auth-server-02",
-    "request_id": "req-m3n4o5d6",
-    "message": "Database connection timeout",
-    "error": "ConnectionTimeout",
-    "status_code": 500,
-    "duration_ms": 5000
-}
-{
-    "timestamp": "2025-10-15T10:15:28.678Z",
-    "level": "INFO",
-    "service": "payment-service",
-    "host": "payment-server-01",
-    "request_id": "req-p6q7r8e9",
-    "message": "Payment processed",
-    "duration_ms": 250,
-    "status_code": 200,
-    "user_id": "user-98765",
-    "amount": 99.99
-}
-{
-    "timestamp": "2025-10-15T10:15:29.901Z",
-    "level": "INFO",
-    "service": "web-api",
-    "host": "api-server-01",
-    "request_id": "req-s9t0u1f2",
-    "message": "POST /api/v1/orders",
-    "duration_ms": 180,
-    "status_code": 201,
-    "user_id": "user-11111"
-}
-{
-    "timestamp": "2025-10-15T10:15:30.234Z",
-    "level": "WARN",
-    "service": "inventory-service",
-    "host": "inventory-server-01",
-    "request_id": "req-v2w3x4g5",
-    "message": "Low stock alert for product SKU-12345",
-    "status_code": 200,
-    "user_id": "user-22222"
-}
-{
-    "timestamp": "2025-10-15T10:15:31.567Z",
-    "level": "ERROR",
-    "service": "payment-service",
-    "host": "payment-server-02",
-    "request_id": "req-y5z6a7h8",
-    "message": "Payment gateway timeout",
-    "error": "GatewayTimeout",
-    "status_code": 504,
-    "duration_ms": 10000
-}
-{
-    "timestamp": "2025-10-15T10:15:32.890Z",
-    "level": "INFO",
-    "service": "notification-service",
-    "host": "notif-server-01",
-    "request_id": "req-b8c9d0i1",
-    "message": "Email notification sent",
-    "duration_ms": 95,
-    "status_code": 200,
-    "user_id": "user-33333"
-}
-{
-    "timestamp": "2025-10-15T10:15:34.123Z",
-    "level": "ERROR",
-    "service": "db-service",
-    "host": "db-server-01",
-    "request_id": "req-e1f2g3j4",
-    "message": "Deadlock detected in transaction",
-    "error": "DeadlockDetected",
-    "status_code": 500,
-    "duration_ms": 3200
-}
-{
-    "timestamp": "2025-10-15T10:15:35.456Z",
-    "level": "INFO",
-    "service": "web-api",
-    "host": "api-server-03",
-    "request_id": "req-h4i5j6k7",
-    "message": "GET /api/v1/users/profile",
-    "duration_ms": 50,
-    "status_code": 200,
-    "user_id": "user-44444"
-}
-{
-    "timestamp": "2025-10-15T10:15:36.789Z",
-    "level": "INFO",
-    "service": "search-service",
-    "host": "search-server-01",
-    "request_id": "req-k7l8m9l0",
-    "message": "Search query executed",
-    "duration_ms": 165,
-    "status_code": 200
-}
-{
-    "timestamp": "2025-10-15T10:15:38.012Z",
-    "level": "WARN",
-    "service": "auth-service",
-    "host": "auth-server-01",
-    "request_id": "req-n0o1p2m3",
-    "message": "Multiple failed login attempts detected",
-    "status_code": 200,
-    "duration_ms": 850,
-    "user_id": "user-55555"
-}
-{
-    "timestamp": "2025-10-15T10:15:39.345Z",
-    "level": "INFO",
-    "service": "web-api",
-    "host": "api-server-01",
-    "request_id": "req-q3r4s5n6",
-    "message": "PUT /api/v1/cart",
-    "duration_ms": 75,
-    "status_code": 200,
-    "user_id": "user-66666"
-}
-{
-    "timestamp": "2025-10-15T10:15:40.678Z",
-    "level": "ERROR",
-    "service": "inventory-service",
-    "host": "inventory-server-02",
-    "request_id": "req-t6u7v8o9",
-    "message": "Failed to update inventory count",
-    "error": "ConcurrencyException",
-    "status_code": 409,
-    "duration_ms": 2400
-}
-{
-    "timestamp": "2025-10-15T10:15:42.901Z",
-    "level": "INFO",
-    "service": "analytics-service",
-    "host": "analytics-server-01",
-    "request_id": "req-w9x0y1p2",
-    "message": "Daily report generated",
-    "duration_ms": 320,
-    "status_code": 200,
-    "user_id": "user-77777"
-}
-{
-    "timestamp": "2025-10-15T10:15:44.234Z",
-    "level": "INFO",
-    "service": "web-api",
-    "host": "api-server-02",
-    "request_id": "req-z2a3b4q5",
-    "message": "DELETE /api/v1/cart/items",
-    "duration_ms": 40,
-    "status_code": 204,
-    "user_id": "user-88888"
-}
-{
-    "timestamp": "2025-10-15T10:15:45.567Z",
-    "level": "WARN",
-    "service": "payment-service",
-    "host": "payment-server-01",
-    "request_id": "req-c5d6e7r8",
-    "message": "Payment declined",
-    "status_code": 402,
-    "duration_ms": 650
-}
-{
-    "timestamp": "2025-10-15T10:15:46.890Z",
-    "level": "INFO",
-    "service": "notification-service",
-    "host": "notif-server-01",
-    "request_id": "req-f8g9h0s1",
-    "message": "SMS notification sent",
-    "duration_ms": 280,
-    "status_code": 200,
-    "user_id": "user-99999"
-}
-{
-    "timestamp": "2025-10-15T10:15:48.123Z",
-    "level": "ERROR",
-    "service": "web-api",
-    "host": "api-server-01",
-    "request_id": "req-i1j2k3t4",
-    "message": "Internal server error",
-    "error": "NullPointerException",
-    "status_code": 500,
-    "duration_ms": 1500
-}
-{
-    "timestamp": "2025-10-15T10:15:49.456Z",
-    "level": "INFO",
-    "service": "search-service",
-    "host": "search-server-02",
-    "request_id": "req-l4m5n6u7",
-    "message": "Cache refreshed successfully",
-    "duration_ms": 190,
-    "status_code": 200
-}
-{
-    "timestamp": "2025-10-15T10:15:50.789Z",
-    "level": "WARN",
-    "service": "db-service",
-    "host": "db-server-01",
-    "request_id": "req-o7p8q9v0",
-    "message": "Connection pool nearly exhausted",
-    "status_code": 200,
-    "duration_ms": 1200
-}
-{
-    "timestamp": "2025-10-15T10:15:52.012Z",
-    "level": "INFO",
-    "service": "payment-service",
-    "host": "payment-server-02",
-    "request_id": "req-r0s1t2w3",
-    "message": "Payment processed",
-    "duration_ms": 280,
-    "status_code": 200,
-    "user_id": "user-10101",
-    "amount": 49.99
-}
-{
-    "timestamp": "2025-10-15T10:15:53.345Z",
-    "level": "ERROR",
-    "service": "auth-service",
-    "host": "auth-server-02",
-    "request_id": "req-u3v4w5x6",
-    "message": "Authentication failed",
-    "error": "AuthenticationError",
-    "status_code": 503,
-    "duration_ms": 4200
-}
+{"timestamp": "2025-10-17T05:56:49.672055Z", "level": "INFO", "service": "notification-service", "host": "notif-server-01", "request_id": "req-e8897ca1", "message": "Request processed successfully", "duration_ms": 39, "status_code": 200, "user_id": null, "amount": null, "error": null}
+{"timestamp": "2025-10-17T05:56:49.672560Z", "level": "INFO", "service": "db-service", "host": "db-server-01", "request_id": "req-2771307e", "message": "GET /api/v1/products", "duration_ms": 262, "status_code": 200, "user_id": null, "amount": null, "error": null}
+{"timestamp": "2025-10-17T05:56:49.672573Z", "level": "INFO", "service": "analytics-service", "host": "analytics-server-01", "request_id": "req-bea9bc2a", "message": "Request processed successfully", "duration_ms": 208, "status_code": 204, "user_id": null, "amount": null, "error": null}
+{"timestamp": "2025-10-17T05:56:49.672580Z", "level": "INFO", "service": "web-api", "host": "api-server-02", "request_id": "req-a1921ca8", "message": "File uploaded successfully", "duration_ms": 137, "status_code": 200, "user_id": "user-20898", "amount": null, "error": null}
+{"timestamp": "2025-10-17T05:56:49.672586Z", "level": "INFO", "service": "notification-service", "host": "notif-server-01", "request_id": "req-645b908b", "message": "Payment processed", "duration_ms": 343, "status_code": 200, "user_id": null, "amount": null, "error": null}
+{"timestamp": "2025-10-17T05:56:49.672592Z", "level": "INFO", "service": "payment-service", "host": "payment-server-02", "request_id": "req-75b209f0", "message": "Session created", "duration_ms": 422, "status_code": 204, "user_id": "user-30730", "amount": null, "error": null}
+{"timestamp": "2025-10-17T05:56:49.672597Z", "level": "WARN", "service": "web-api", "host": "api-server-03", "request_id": "req-fee84204", "message": "Payment declined", "duration_ms": 1809, "status_code": 200, "user_id": null, "amount": null, "error": null}
+{"timestamp": "2025-10-17T05:56:49.672602Z", "level": "INFO", "service": "payment-service", "host": "payment-server-02", "request_id": "req-5fad8743", "message": "SMS notification sent", "duration_ms": 245, "status_code": 204, "user_id": "user-75470", "amount": null, "error": null}
+{"timestamp": "2025-10-17T05:56:49.672607Z", "level": "INFO", "service": "analytics-service", "host": "analytics-server-01", "request_id": "req-b1798381", "message": "Session created", "duration_ms": 11, "status_code": 201, "user_id": "user-52046", "amount": null, "error": null}
+{"timestamp": "2025-10-17T05:56:49.672611Z", "level": "INFO", "service": "auth-service", "host": "auth-server-02", "request_id": "req-024bf5e3", "message": "PUT /api/v1/cart", "duration_ms": 345, "status_code": 201, "user_id": "user-53981", "amount": null, "error": null}
+{"timestamp": "2025-10-17T05:56:49.672617Z", "level": "ERROR", "service": "inventory-service", "host": "inventory-server-01", "request_id": "req-f8cef463", "message": "Database connection timeout", "duration_ms": 6037, "status_code": 503, "user_id": null, "amount": null, "error": "ConnectionTimeout"}
+{"timestamp": "2025-10-17T05:56:49.672623Z", "level": "INFO", "service": "auth-service", "host": "auth-server-01", "request_id": "req-54c26a61", "message": "Request processed successfully", "duration_ms": 167, "status_code": 204, "user_id": "user-48480", "amount": null, "error": null}
+{"timestamp": "2025-10-17T05:56:49.672628Z", "level": "INFO", "service": "search-service", "host": "search-server-02", "request_id": "req-81150b05", "message": "Payment processed", "duration_ms": 350, "status_code": 204, "user_id": "user-51706", "amount": null, "error": null}
+{"timestamp": "2025-10-17T05:56:49.672632Z", "level": "INFO", "service": "web-api", "host": "api-server-02", "request_id": "req-57f7da1c", "message": "Cache refreshed successfully", "duration_ms": 164, "status_code": 200, "user_id": "user-88439", "amount": null, "error": null}
+{"timestamp": "2025-10-17T05:56:49.672636Z", "level": "WARN", "service": "payment-service", "host": "payment-server-01", "request_id": "req-1151868d", "message": "Query execution took longer than expected", "duration_ms": null, "status_code": 402, "user_id": "user-99044", "amount": null, "error": null}
+{"timestamp": "2025-10-17T05:56:49.672641Z", "level": "WARN", "service": "auth-service", "host": "auth-server-02", "request_id": "req-1a4e7613", "message": "Payment declined", "duration_ms": null, "status_code": 200, "user_id": null, "amount": null, "error": null}
+{"timestamp": "2025-10-17T05:56:49.672645Z", "level": "INFO", "service": "auth-service", "host": "auth-server-01", "request_id": "req-47d3e16f", "message": "GET /api/v1/products", "duration_ms": 164, "status_code": 204, "user_id": "user-73153", "amount": null, "error": null}
+{"timestamp": "2025-10-17T05:56:49.672649Z", "level": "INFO", "service": "notification-service", "host": "notif-server-01", "request_id": "req-b5adbeb7", "message": "SMS notification sent", "duration_ms": 73, "status_code": 204, "user_id": "user-11792", "amount": null, "error": null}
+{"timestamp": "2025-10-17T05:56:49.672654Z", "level": "INFO", "service": "web-api", "host": "api-server-01", "request_id": "req-fc64c30b", "message": "Email notification sent", "duration_ms": 121, "status_code": 204, "user_id": "user-93216", "amount": null, "error": null}
+{"timestamp": "2025-10-17T05:56:49.672657Z", "level": "INFO", "service": "inventory-service", "host": "inventory-server-01", "request_id": "req-16b2916b", "message": "PUT /api/v1/cart", "duration_ms": 196, "status_code": 201, "user_id": null, "amount": null, "error": null}
+{"timestamp": "2025-10-17T05:56:49.672662Z", "level": "INFO", "service": "inventory-service", "host": "inventory-server-01", "request_id": "req-abe1a073", "message": "Search query executed", "duration_ms": 277, "status_code": 200, "user_id": "user-18312", "amount": null, "error": null}
+{"timestamp": "2025-10-17T05:56:49.672666Z", "level": "INFO", "service": "payment-service", "host": "payment-server-01", "request_id": "req-4ae977a6", "message": "GET /api/v1/products", "duration_ms": 477, "status_code": 200, "user_id": "user-24489", "amount": null, "error": null}
+{"timestamp": "2025-10-17T05:56:49.672671Z", "level": "INFO", "service": "web-api", "host": "api-server-01", "request_id": "req-9f2ad0d3", "message": "DELETE /api/v1/cart/items", "duration_ms": 127, "status_code": 200, "user_id": null, "amount": null, "error": null}
+{"timestamp": "2025-10-17T05:56:49.672674Z", "level": "INFO", "service": "db-service", "host": "db-server-01", "request_id": "req-e26dde2c", "message": "POST /api/v1/orders", "duration_ms": 229, "status_code": 204, "user_id": "user-86595", "amount": null, "error": null}
+{"timestamp": "2025-10-17T05:56:49.672678Z", "level": "INFO", "service": "web-api", "host": "api-server-02", "request_id": "req-9cfda603", "message": "Email notification sent", "duration_ms": 232, "status_code": 200, "user_id": "user-53223", "amount": null, "error": null}
+{"timestamp": "2025-10-17T05:56:49.672682Z", "level": "INFO", "service": "search-service", "host": "search-server-02", "request_id": "req-2f08492b", "message": "PUT /api/v1/cart", "duration_ms": 286, "status_code": 204, "user_id": null, "amount": null, "error": null}
+{"timestamp": "2025-10-17T05:56:49.672687Z", "level": "WARN", "service": "notification-service", "host": "notif-server-01", "request_id": "req-da4adab7", "message": "Connection pool nearly exhausted", "duration_ms": 1395, "status_code": 402, "user_id": "user-24797", "amount": null, "error": null}
+{"timestamp": "2025-10-17T05:56:49.672691Z", "level": "INFO", "service": "search-service", "host": "search-server-02", "request_id": "req-8998cf7e", "message": "Session created", "duration_ms": 414, "status_code": 200, "user_id": "user-13991", "amount": null, "error": null}
+{"timestamp": "2025-10-17T05:56:49.672695Z", "level": "INFO", "service": "db-service", "host": "db-server-01", "request_id": "req-6937db0b", "message": "PUT /api/v1/cart", "duration_ms": 99, "status_code": 201, "user_id": "user-12467", "amount": null, "error": null}
+{"timestamp": "2025-10-17T05:56:49.672700Z", "level": "INFO", "service": "notification-service", "host": "notif-server-01", "request_id": "req-de41ada6", "message": "GET /api/v1/users/profile", "duration_ms": 253, "status_code": 200, "user_id": "user-47620", "amount": null, "error": null}
+{"timestamp": "2025-10-17T05:56:49.672741Z", "level": "INFO", "service": "web-api", "host": "api-server-03", "request_id": "req-0c97669b", "message": "Search query executed", "duration_ms": 499, "status_code": 200, "user_id": null, "amount": null, "error": null}
+{"timestamp": "2025-10-17T05:56:49.672750Z", "level": "ERROR", "service": "auth-service", "host": "auth-server-02", "request_id": "req-1eb541f9", "message": "Invalid input data", "duration_ms": 3582, "status_code": 500, "user_id": null, "amount": null, "error": "ValidationError"}
+{"timestamp": "2025-10-17T05:56:49.672756Z", "level": "WARN", "service": "notification-service", "host": "notif-server-01", "request_id": "req-bab3828e", "message": "Multiple failed login attempts detected", "duration_ms": 1540, "status_code": 200, "user_id": null, "amount": null, "error": null}
+{"timestamp": "2025-10-17T05:56:49.672761Z", "level": "ERROR", "service": "notification-service", "host": "notif-server-01", "request_id": "req-ae56262e", "message": "Payment gateway timeout", "duration_ms": 3520, "status_code": 409, "user_id": null, "amount": null, "error": "GatewayTimeout"}
+{"timestamp": "2025-10-17T05:56:49.672766Z", "level": "INFO", "service": "payment-service", "host": "payment-server-02", "request_id": "req-7cde9a8e", "message": "File uploaded successfully", "duration_ms": 425, "status_code": 204, "user_id": "user-77419", "amount": null, "error": null}
+{"timestamp": "2025-10-17T05:56:49.672770Z", "level": "INFO", "service": "search-service", "host": "search-server-02", "request_id": "req-44031d3c", "message": "User authentication successful", "duration_ms": 354, "status_code": 200, "user_id": "user-23204", "amount": null, "error": null}
+{"timestamp": "2025-10-17T05:56:49.672775Z", "level": "WARN", "service": "analytics-service", "host": "analytics-server-01", "request_id": "req-300b1795", "message": "Payment declined", "duration_ms": null, "status_code": 200, "user_id": "user-56745", "amount": null, "error": null}
+{"timestamp": "2025-10-17T05:56:49.672779Z", "level": "INFO", "service": "inventory-service", "host": "inventory-server-01", "request_id": "req-9891cdbc", "message": "POST /api/v1/orders", "duration_ms": 440, "status_code": 204, "user_id": "user-88264", "amount": null, "error": null}
+{"timestamp": "2025-10-17T05:56:49.672783Z", "level": "ERROR", "service": "auth-service", "host": "auth-server-01", "request_id": "req-48bd91ac", "message": "Invalid input data", "duration_ms": 2137, "status_code": 504, "user_id": null, "amount": null, "error": "ValidationError"}
+{"timestamp": "2025-10-17T05:56:49.672786Z", "level": "INFO", "service": "inventory-service", "host": "inventory-server-02", "request_id": "req-a4e56352", "message": "Request processed successfully", "duration_ms": 19, "status_code": 204, "user_id": null, "amount": null, "error": null}
+{"timestamp": "2025-10-17T05:56:49.672791Z", "level": "ERROR", "service": "payment-service", "host": "payment-server-02", "request_id": "req-c7d839e4", "message": "Internal server error", "duration_ms": 6104, "status_code": 504, "user_id": null, "amount": null, "error": "NullPointerException"}
+{"timestamp": "2025-10-17T05:56:49.672795Z", "level": "INFO", "service": "notification-service", "host": "notif-server-01", "request_id": "req-467f55ce", "message": "User authentication successful", "duration_ms": 161, "status_code": 201, "user_id": null, "amount": null, "error": null}
+{"timestamp": "2025-10-17T05:56:49.672799Z", "level": "INFO", "service": "web-api", "host": "api-server-01", "request_id": "req-39927211", "message": "GET /api/v1/products", "duration_ms": 240, "status_code": 204, "user_id": "user-53639", "amount": null, "error": null}
+{"timestamp": "2025-10-17T05:56:49.672803Z", "level": "INFO", "service": "db-service", "host": "db-server-01", "request_id": "req-6eedb777", "message": "Payment processed", "duration_ms": 371, "status_code": 201, "user_id": "user-12767", "amount": null, "error": null}
+{"timestamp": "2025-10-17T05:56:49.672807Z", "level": "INFO", "service": "payment-service", "host": "payment-server-02", "request_id": "req-ca54059a", "message": "SMS notification sent", "duration_ms": 377, "status_code": 200, "user_id": "user-62386", "amount": null, "error": null}
+{"timestamp": "2025-10-17T05:56:49.672811Z", "level": "INFO", "service": "auth-service", "host": "auth-server-02", "request_id": "req-5fbbd6ee", "message": "Cache refreshed successfully", "duration_ms": 224, "status_code": 204, "user_id": null, "amount": null, "error": null}
+{"timestamp": "2025-10-17T05:56:49.672815Z", "level": "ERROR", "service": "web-api", "host": "api-server-02", "request_id": "req-fb66e78c", "message": "Payment gateway timeout", "duration_ms": 8678, "status_code": 504, "user_id": null, "amount": null, "error": "GatewayTimeout"}
+{"timestamp": "2025-10-17T05:56:49.672819Z", "level": "INFO", "service": "search-service", "host": "search-server-02", "request_id": "req-3061d0e5", "message": "DELETE /api/v1/cart/items", "duration_ms": 168, "status_code": 201, "user_id": "user-82489", "amount": null, "error": null}
+{"timestamp": "2025-10-17T05:56:49.672823Z", "level": "INFO", "service": "inventory-service", "host": "inventory-server-02", "request_id": "req-53c493ab", "message": "DELETE /api/v1/cart/items", "duration_ms": 85, "status_code": 200, "user_id": "user-23810", "amount": null, "error": null}
+{"timestamp": "2025-10-17T05:56:49.672827Z", "level": "INFO", "service": "notification-service", "host": "notif-server-01", "request_id": "req-9aa089fb", "message": "GET /api/v1/users/profile", "duration_ms": 414, "status_code": 201, "user_id": null, "amount": null, "error": null}

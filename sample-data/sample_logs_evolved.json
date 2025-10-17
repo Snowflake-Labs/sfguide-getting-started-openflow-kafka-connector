@@ -1,206 +1,30 @@
-{
-    "timestamp": "2025-10-15T10:16:01.234Z",
-    "level": "INFO",
-    "service": "inventory-service",
-    "host": "inventory-server-01",
-    "request_id": "req-g4h5i6j7",
-    "message": "Inventory updated successfully",
-    "duration_ms": 220,
-    "status_code": 200,
-    "user_id": "user-30303",
-    "region": "us-west-2",
-    "trace_id": "trace-abc123def456"
-}
-{
-    "timestamp": "2025-10-15T10:16:02.567Z",
-    "level": "ERROR",
-    "service": "payment-service",
-    "host": "payment-server-01",
-    "request_id": "req-k8l9m0n1",
-    "message": "Service unavailable",
-    "error": "ServiceUnavailable",
-    "status_code": 503,
-    "duration_ms": 8000,
-    "retry_count": 3,
-    "region": "us-east-1"
-}
-{
-    "timestamp": "2025-10-15T10:16:04.890Z",
-    "level": "INFO",
-    "service": "web-api",
-    "host": "api-server-02",
-    "request_id": "req-o2p3q4r5",
-    "message": "File uploaded successfully",
-    "duration_ms": 450,
-    "status_code": 201,
-    "user_id": "user-40404",
-    "file_size_bytes": 1048576,
-    "content_type": "image/jpeg",
-    "region": "us-west-1"
-}
-{
-    "timestamp": "2025-10-15T10:16:06.123Z",
-    "level": "WARN",
-    "service": "analytics-service",
-    "host": "analytics-server-01",
-    "request_id": "req-s6t7u8v9",
-    "message": "Memory usage above 80%",
-    "status_code": 200,
-    "duration_ms": 950,
-    "memory_percent": 84.5,
-    "available_mb": 512,
-    "region": "eu-west-1"
-}
-{
-    "timestamp": "2025-10-15T10:16:07.456Z",
-    "level": "INFO",
-    "service": "auth-service",
-    "host": "auth-server-01",
-    "request_id": "req-w0x1y2z3",
-    "message": "User authentication successful",
-    "duration_ms": 95,
-    "status_code": 200,
-    "user_id": "user-50505",
-    "auth_method": "oauth2",
-    "provider": "google",
-    "region": "us-central-1"
-}
-{
-    "timestamp": "2025-10-15T10:16:08.789Z",
-    "level": "ERROR",
-    "service": "inventory-service",
-    "host": "inventory-server-02",
-    "request_id": "req-a4b5c6d7",
-    "message": "Invalid input data",
-    "error": "ValidationError",
-    "status_code": 500,
-    "duration_ms": 3600,
-    "validation_errors": [
-        "missing_sku",
-        "invalid_quantity"
-    ],
-    "region": "ap-south-1"
-}
-{
-    "timestamp": "2025-10-15T10:16:10.012Z",
-    "level": "INFO",
-    "service": "payment-service",
-    "host": "payment-server-02",
-    "request_id": "req-e8f9g0h1",
-    "message": "Payment processed",
-    "duration_ms": 315,
-    "status_code": 200,
-    "user_id": "user-60606",
-    "amount": 149.95,
-    "currency": "USD",
-    "payment_method": "credit_card",
-    "region": "us-east-1"
-}
-{
-    "timestamp": "2025-10-15T10:16:11.345Z",
-    "level": "WARN",
-    "service": "search-service",
-    "host": "search-server-01",
-    "request_id": "req-i2j3k4l5",
-    "message": "Disk space running low",
-    "status_code": 200,
-    "duration_ms": 780,
-    "disk_usage_percent": 92,
-    "available_gb": 45,
-    "region": "eu-central-1"
-}
-{
-    "timestamp": "2025-10-15T10:16:12.678Z",
-    "level": "INFO",
-    "service": "web-api",
-    "host": "api-server-01",
-    "request_id": "req-m6n7o8p9",
-    "message": "GET /api/v1/products",
-    "duration_ms": 42,
-    "status_code": 200,
-    "user_id": "user-70707",
-    "query_params": {
-        "category": "electronics",
-        "limit": 50
-    },
-    "result_count": 47,
-    "region": "us-west-2"
-}
-{
-    "test": true,
-    "message": "Health check - extended schema test",
-    "timestamp": "2025-10-15T10:16:13.500Z",
-    "status": "healthy",
-    "version": "2.0"
-}
-{
-    "timestamp": "2025-10-15T10:16:15.234Z",
-    "level": "INFO",
-    "service": "web-api",
-    "host": "api-server-02",
-    "request_id": "req-n7o8p9q0",
-    "message": "POST /api/v1/reviews",
-    "duration_ms": 125,
-    "status_code": 201,
-    "user_id": "user-80808",
-    "product_id": "prod-12345",
-    "rating": 5,
-    "region": "ap-northeast-1"
-}
-{
-    "timestamp": "2025-10-15T10:16:17.567Z",
-    "level": "ERROR",
-    "service": "notification-service",
-    "host": "notif-server-01",
-    "request_id": "req-r1s2t3u4",
-    "message": "Email delivery failed",
-    "error": "SMTPException",
-    "status_code": 500,
-    "duration_ms": 5500,
-    "recipient": "user@example.com",
-    "smtp_code": 554,
-    "region": "us-east-2"
-}
-{
-    "timestamp": "2025-10-15T10:16:19.890Z",
-    "level": "INFO",
-    "service": "analytics-service",
-    "host": "analytics-server-01",
-    "request_id": "req-v5w6x7y8",
-    "message": "Real-time metrics updated",
-    "duration_ms": 280,
-    "status_code": 200,
-    "metrics_count": 1547,
-    "time_window": "1h",
-    "region": "eu-west-2"
-}
-{
-    "timestamp": "2025-10-15T10:16:21.123Z",
-    "level": "INFO",
-    "service": "payment-service",
-    "host": "payment-server-01",
-    "request_id": "req-z9a0b1c2",
-    "message": "Payment processed",
-    "duration_ms": 198,
-    "status_code": 200,
-    "user_id": "user-90909",
-    "amount": 249.99,
-    "currency": "EUR",
-    "payment_method": "paypal",
-    "region": "eu-west-1"
-}
-{
-    "timestamp": "2025-10-15T10:16:23.456Z",
-    "level": "INFO",
-    "service": "auth-service",
-    "host": "auth-server-02",
-    "request_id": "req-d3e4f5g6",
-    "message": "User authentication successful",
-    "duration_ms": 110,
-    "status_code": 200,
-    "user_id": "user-11223",
-    "auth_method": "saml",
-    "provider": "okta",
-    "session_duration": 3600,
-    "region": "us-central-1"
-}
+{"timestamp": "2025-10-17T05:47:30.393499Z", "level": "INFO", "service": "payment-service", "host": "payment-server-02", "request_id": "req-800674ed", "message": "DELETE /api/v1/cart/items", "duration_ms": 500, "status_code": 200, "user_id": "user-85064", "amount": 367.31, "error": null, "region": "ap-northeast-1", "trace_id": null, "auth_method": null, "provider": null, "session_duration": null, "currency": "EUR", "payment_method": "credit_card", "retry_count": null, "file_size_bytes": null, "content_type": null, "memory_percent": null, "available_mb": null, "disk_usage_percent": null, "available_gb": null, "query_params": null, "result_count": null, "recipient": null, "smtp_code": null, "metrics_count": null, "time_window": null, "product_id": null, "rating": null, "version": null, "status": null, "test": null, "validation_errors": null}
+{"timestamp": "2025-10-17T05:47:30.393953Z", "level": "INFO", "service": "analytics-service", "host": "analytics-server-01", "request_id": "req-1613f405", "message": "SMS notification sent", "duration_ms": 375, "status_code": 201, "user_id": "user-23204", "amount": null, "error": null, "region": "eu-west-1", "trace_id": "trace-c66f6c9ca3226ba8", "auth_method": null, "provider": null, "session_duration": null, "currency": null, "payment_method": null, "retry_count": null, "file_size_bytes": null, "content_type": null, "memory_percent": null, "available_mb": null, "disk_usage_percent": null, "available_gb": null, "query_params": null, "result_count": null, "recipient": null, "smtp_code": null, "metrics_count": null, "time_window": null, "product_id": null, "rating": null, "version": null, "status": null, "test": null, "validation_errors": null}
+{"timestamp": "2025-10-17T05:47:30.393974Z", "level": "INFO", "service": "analytics-service", "host": "analytics-server-01", "request_id": "req-1089e796", "message": "Search query executed", "duration_ms": 121, "status_code": 201, "user_id": null, "amount": null, "error": null, "region": "eu-central-1", "trace_id": null, "auth_method": null, "provider": null, "session_duration": null, "currency": null, "payment_method": null, "retry_count": null, "file_size_bytes": null, "content_type": null, "memory_percent": null, "available_mb": null, "disk_usage_percent": null, "available_gb": null, "query_params": null, "result_count": null, "recipient": null, "smtp_code": null, "metrics_count": null, "time_window": null, "product_id": null, "rating": null, "version": null, "status": "unhealthy", "test": null, "validation_errors": null}
+{"timestamp": "2025-10-17T05:47:30.393987Z", "level": "INFO", "service": "notification-service", "host": "notif-server-01", "request_id": "req-694e7e30", "message": "Cache refreshed successfully", "duration_ms": 158, "status_code": 204, "user_id": null, "amount": null, "error": null, "region": null, "trace_id": null, "auth_method": null, "provider": null, "session_duration": null, "currency": null, "payment_method": null, "retry_count": null, "file_size_bytes": null, "content_type": null, "memory_percent": null, "available_mb": null, "disk_usage_percent": null, "available_gb": null, "query_params": null, "result_count": null, "recipient": null, "smtp_code": null, "metrics_count": null, "time_window": null, "product_id": null, "rating": null, "version": "2.1", "status": null, "test": null, "validation_errors": null}
+{"timestamp": "2025-10-17T05:47:30.393998Z", "level": "INFO", "service": "search-service", "host": "search-server-01", "request_id": "req-3a53eeb2", "message": "DELETE /api/v1/cart/items", "duration_ms": 414, "status_code": 204, "user_id": null, "amount": null, "error": null, "region": "eu-central-1", "trace_id": null, "auth_method": null, "provider": null, "session_duration": null, "currency": null, "payment_method": null, "retry_count": null, "file_size_bytes": null, "content_type": null, "memory_percent": null, "available_mb": null, "disk_usage_percent": null, "available_gb": null, "query_params": null, "result_count": null, "recipient": null, "smtp_code": null, "metrics_count": null, "time_window": null, "product_id": null, "rating": null, "version": null, "status": null, "test": null, "validation_errors": null}
+{"timestamp": "2025-10-17T05:47:30.394008Z", "level": "INFO", "service": "search-service", "host": "search-server-02", "request_id": "req-071bf104", "message": "SMS notification sent", "duration_ms": 141, "status_code": 201, "user_id": "user-26181", "amount": null, "error": null, "region": "eu-west-1", "trace_id": null, "auth_method": null, "provider": null, "session_duration": null, "currency": null, "payment_method": null, "retry_count": null, "file_size_bytes": null, "content_type": null, "memory_percent": null, "available_mb": null, "disk_usage_percent": null, "available_gb": null, "query_params": null, "result_count": null, "recipient": null, "smtp_code": null, "metrics_count": null, "time_window": null, "product_id": null, "rating": null, "version": null, "status": null, "test": null, "validation_errors": null}
+{"timestamp": "2025-10-17T05:47:30.394017Z", "level": "INFO", "service": "search-service", "host": "search-server-01", "request_id": "req-53265e16", "message": "POST /api/v1/orders", "duration_ms": 141, "status_code": 200, "user_id": "user-28950", "amount": null, "error": null, "region": "eu-west-1", "trace_id": null, "auth_method": null, "provider": null, "session_duration": null, "currency": null, "payment_method": null, "retry_count": null, "file_size_bytes": null, "content_type": null, "memory_percent": null, "available_mb": null, "disk_usage_percent": null, "available_gb": null, "query_params": null, "result_count": null, "recipient": null, "smtp_code": null, "metrics_count": null, "time_window": null, "product_id": null, "rating": null, "version": null, "status": null, "test": null, "validation_errors": null}
+{"timestamp": "2025-10-17T05:47:30.394025Z", "level": "INFO", "service": "notification-service", "host": "notif-server-01", "request_id": "req-4a4d0fd4", "message": "POST /api/v1/orders", "duration_ms": 496, "status_code": 204, "user_id": null, "amount": null, "error": null, "region": "us-central-1", "trace_id": null, "auth_method": null, "provider": null, "session_duration": null, "currency": null, "payment_method": null, "retry_count": null, "file_size_bytes": null, "content_type": null, "memory_percent": null, "available_mb": null, "disk_usage_percent": null, "available_gb": null, "query_params": null, "result_count": null, "recipient": null, "smtp_code": null, "metrics_count": null, "time_window": null, "product_id": null, "rating": null, "version": null, "status": "degraded", "test": null, "validation_errors": null}
+{"timestamp": "2025-10-17T05:47:30.394034Z", "level": "INFO", "service": "search-service", "host": "search-server-02", "request_id": "req-73f67677", "message": "Search query executed", "duration_ms": 68, "status_code": 201, "user_id": "user-20240", "amount": null, "error": null, "region": "eu-central-1", "trace_id": null, "auth_method": null, "provider": null, "session_duration": null, "currency": null, "payment_method": null, "retry_count": null, "file_size_bytes": null, "content_type": null, "memory_percent": null, "available_mb": null, "disk_usage_percent": null, "available_gb": null, "query_params": {"category": "clothing", "limit": 10}, "result_count": 0, "recipient": null, "smtp_code": null, "metrics_count": null, "time_window": null, "product_id": null, "rating": null, "version": null, "status": null, "test": null, "validation_errors": null}
+{"timestamp": "2025-10-17T05:47:30.394044Z", "level": "INFO", "service": "inventory-service", "host": "inventory-server-01", "request_id": "req-e1a998be", "message": "Daily report generated", "duration_ms": 77, "status_code": 200, "user_id": "user-88664", "amount": null, "error": null, "region": "us-central-1", "trace_id": null, "auth_method": null, "provider": null, "session_duration": null, "currency": null, "payment_method": null, "retry_count": null, "file_size_bytes": null, "content_type": null, "memory_percent": null, "available_mb": null, "disk_usage_percent": null, "available_gb": null, "query_params": null, "result_count": null, "recipient": null, "smtp_code": null, "metrics_count": null, "time_window": null, "product_id": null, "rating": null, "version": null, "status": null, "test": null, "validation_errors": null}
+{"timestamp": "2025-10-17T05:47:30.394102Z", "level": "WARN", "service": "payment-service", "host": "payment-server-02", "request_id": "req-39c00c1d", "message": "Rate limit approaching threshold", "duration_ms": 745, "status_code": 402, "user_id": null, "amount": 413.28, "error": null, "region": "eu-central-1", "trace_id": null, "auth_method": null, "provider": null, "session_duration": null, "currency": "EUR", "payment_method": "credit_card", "retry_count": null, "file_size_bytes": null, "content_type": null, "memory_percent": null, "available_mb": null, "disk_usage_percent": null, "available_gb": null, "query_params": null, "result_count": null, "recipient": null, "smtp_code": null, "metrics_count": null, "time_window": null, "product_id": null, "rating": null, "version": null, "status": null, "test": null, "validation_errors": null}
+{"timestamp": "2025-10-17T05:47:30.394116Z", "level": "INFO", "service": "web-api", "host": "api-server-02", "request_id": "req-9299f768", "message": "Daily report generated", "duration_ms": 437, "status_code": 201, "user_id": null, "amount": null, "error": null, "region": null, "trace_id": null, "auth_method": null, "provider": null, "session_duration": null, "currency": null, "payment_method": null, "retry_count": null, "file_size_bytes": 494252, "content_type": "application/pdf", "memory_percent": null, "available_mb": null, "disk_usage_percent": null, "available_gb": null, "query_params": null, "result_count": null, "recipient": null, "smtp_code": null, "metrics_count": null, "time_window": null, "product_id": null, "rating": null, "version": null, "status": null, "test": null, "validation_errors": null}
+{"timestamp": "2025-10-17T05:47:30.394127Z", "level": "INFO", "service": "db-service", "host": "db-server-01", "request_id": "req-5202aebc", "message": "User authentication successful", "duration_ms": 229, "status_code": 200, "user_id": "user-31076", "amount": null, "error": null, "region": null, "trace_id": null, "auth_method": null, "provider": null, "session_duration": null, "currency": null, "payment_method": null, "retry_count": null, "file_size_bytes": null, "content_type": null, "memory_percent": null, "available_mb": null, "disk_usage_percent": null, "available_gb": null, "query_params": null, "result_count": null, "recipient": null, "smtp_code": null, "metrics_count": null, "time_window": null, "product_id": null, "rating": null, "version": "2.0", "status": null, "test": null, "validation_errors": null}
+{"timestamp": "2025-10-17T05:47:30.394136Z", "level": "INFO", "service": "inventory-service", "host": "inventory-server-01", "request_id": "req-135abc72", "message": "Email notification sent", "duration_ms": 347, "status_code": 204, "user_id": "user-43756", "amount": null, "error": null, "region": "eu-central-1", "trace_id": null, "auth_method": null, "provider": null, "session_duration": null, "currency": null, "payment_method": null, "retry_count": null, "file_size_bytes": null, "content_type": null, "memory_percent": null, "available_mb": null, "disk_usage_percent": null, "available_gb": null, "query_params": null, "result_count": null, "recipient": null, "smtp_code": null, "metrics_count": null, "time_window": null, "product_id": null, "rating": null, "version": null, "status": null, "test": null, "validation_errors": null}
+{"timestamp": "2025-10-17T05:47:30.394144Z", "level": "WARN", "service": "analytics-service", "host": "analytics-server-01", "request_id": "req-c5a44bca", "message": "Payment declined", "duration_ms": null, "status_code": 402, "user_id": null, "amount": null, "error": null, "region": "us-central-1", "trace_id": null, "auth_method": null, "provider": null, "session_duration": null, "currency": null, "payment_method": null, "retry_count": null, "file_size_bytes": null, "content_type": null, "memory_percent": null, "available_mb": null, "disk_usage_percent": null, "available_gb": null, "query_params": null, "result_count": null, "recipient": null, "smtp_code": null, "metrics_count": null, "time_window": null, "product_id": null, "rating": null, "version": null, "status": null, "test": null, "validation_errors": null}
+{"timestamp": "2025-10-17T05:47:30.394152Z", "level": "WARN", "service": "notification-service", "host": "notif-server-01", "request_id": "req-2cf68de8", "message": "Query execution took longer than expected", "duration_ms": 1701, "status_code": 200, "user_id": "user-30680", "amount": null, "error": null, "region": "us-east-1", "trace_id": null, "auth_method": null, "provider": null, "session_duration": null, "currency": null, "payment_method": null, "retry_count": null, "file_size_bytes": null, "content_type": null, "memory_percent": null, "available_mb": null, "disk_usage_percent": null, "available_gb": null, "query_params": null, "result_count": null, "recipient": null, "smtp_code": null, "metrics_count": null, "time_window": null, "product_id": null, "rating": null, "version": null, "status": null, "test": null, "validation_errors": null}
+{"timestamp": "2025-10-17T05:47:30.394162Z", "level": "ERROR", "service": "search-service", "host": "search-server-01", "request_id": "req-3ac30eef", "message": "Internal server error", "duration_ms": 5934, "status_code": 503, "user_id": null, "amount": null, "error": "NullPointerException", "region": "us-west-2", "trace_id": "trace-5f101b3b7a7a8fe9", "auth_method": null, "provider": null, "session_duration": null, "currency": null, "payment_method": null, "retry_count": 2, "file_size_bytes": null, "content_type": null, "memory_percent": null, "available_mb": null, "disk_usage_percent": null, "available_gb": null, "query_params": null, "result_count": null, "recipient": null, "smtp_code": null, "metrics_count": null, "time_window": null, "product_id": null, "rating": null, "version": null, "status": null, "test": null, "validation_errors": null}
+{"timestamp": "2025-10-17T05:47:30.394172Z", "level": "WARN", "service": "web-api", "host": "api-server-01", "request_id": "req-f4b1f074", "message": "Connection pool nearly exhausted", "duration_ms": null, "status_code": 200, "user_id": null, "amount": null, "error": null, "region": "ap-south-1", "trace_id": null, "auth_method": null, "provider": null, "session_duration": null, "currency": null, "payment_method": null, "retry_count": null, "file_size_bytes": null, "content_type": null, "memory_percent": null, "available_mb": null, "disk_usage_percent": null, "available_gb": null, "query_params": {"category": "clothing", "limit": 100}, "result_count": 18, "recipient": null, "smtp_code": null, "metrics_count": null, "time_window": null, "product_id": null, "rating": null, "version": null, "status": null, "test": null, "validation_errors": null}
+{"timestamp": "2025-10-17T05:47:30.394182Z", "level": "INFO", "service": "auth-service", "host": "auth-server-02", "request_id": "req-435e1f67", "message": "Email notification sent", "duration_ms": 21, "status_code": 204, "user_id": "user-77291", "amount": null, "error": null, "region": "eu-central-1", "trace_id": null, "auth_method": "api_key", "provider": "okta", "session_duration": null, "currency": null, "payment_method": null, "retry_count": null, "file_size_bytes": null, "content_type": null, "memory_percent": null, "available_mb": null, "disk_usage_percent": null, "available_gb": null, "query_params": null, "result_count": null, "recipient": null, "smtp_code": null, "metrics_count": null, "time_window": null, "product_id": null, "rating": null, "version": null, "status": null, "test": null, "validation_errors": null}
+{"timestamp": "2025-10-17T05:47:30.394204Z", "level": "INFO", "service": "notification-service", "host": "notif-server-01", "request_id": "req-8e2dc0bd", "message": "User authentication successful", "duration_ms": 11, "status_code": 204, "user_id": "user-35996", "amount": null, "error": null, "region": null, "trace_id": "trace-966a687102d0cec4", "auth_method": null, "provider": null, "session_duration": null, "currency": null, "payment_method": null, "retry_count": null, "file_size_bytes": null, "content_type": null, "memory_percent": null, "available_mb": null, "disk_usage_percent": null, "available_gb": null, "query_params": null, "result_count": null, "recipient": null, "smtp_code": null, "metrics_count": null, "time_window": null, "product_id": null, "rating": null, "version": null, "status": null, "test": null, "validation_errors": null}
+{"timestamp": "2025-10-17T05:47:30.394214Z", "level": "INFO", "service": "notification-service", "host": "notif-server-01", "request_id": "req-35c0d145", "message": "Daily report generated", "duration_ms": 11, "status_code": 204, "user_id": "user-85276", "amount": null, "error": null, "region": "eu-west-1", "trace_id": null, "auth_method": null, "provider": null, "session_duration": null, "currency": null, "payment_method": null, "retry_count": null, "file_size_bytes": null, "content_type": null, "memory_percent": null, "available_mb": null, "disk_usage_percent": null, "available_gb": null, "query_params": null, "result_count": null, "recipient": null, "smtp_code": null, "metrics_count": null, "time_window": null, "product_id": null, "rating": null, "version": "1.0", "status": null, "test": null, "validation_errors": null}
+{"timestamp": "2025-10-17T05:47:30.394223Z", "level": "ERROR", "service": "notification-service", "host": "notif-server-01", "request_id": "req-063a4815", "message": "Invalid input data", "duration_ms": 4820, "status_code": 504, "user_id": null, "amount": null, "error": "ValidationError", "region": "ap-south-1", "trace_id": null, "auth_method": null, "provider": null, "session_duration": null, "currency": null, "payment_method": null, "retry_count": null, "file_size_bytes": null, "content_type": null, "memory_percent": null, "available_mb": null, "disk_usage_percent": null, "available_gb": null, "query_params": null, "result_count": null, "recipient": null, "smtp_code": null, "metrics_count": null, "time_window": null, "product_id": null, "rating": null, "version": null, "status": null, "test": null, "validation_errors": null}
+{"timestamp": "2025-10-17T05:47:30.394231Z", "level": "ERROR", "service": "notification-service", "host": "notif-server-01", "request_id": "req-a88c5097", "message": "Service unavailable", "duration_ms": 6775, "status_code": 503, "user_id": null, "amount": null, "error": "ServiceUnavailable", "region": "us-east-1", "trace_id": "trace-b7a39fb30947431d", "auth_method": null, "provider": null, "session_duration": null, "currency": null, "payment_method": null, "retry_count": 3, "file_size_bytes": null, "content_type": null, "memory_percent": null, "available_mb": null, "disk_usage_percent": null, "available_gb": null, "query_params": null, "result_count": null, "recipient": null, "smtp_code": null, "metrics_count": null, "time_window": null, "product_id": null, "rating": null, "version": null, "status": null, "test": null, "validation_errors": null}
+{"timestamp": "2025-10-17T05:47:30.394242Z", "level": "WARN", "service": "notification-service", "host": "notif-server-01", "request_id": "req-eae7d490", "message": "Multiple failed login attempts detected", "duration_ms": 1814, "status_code": 402, "user_id": null, "amount": null, "error": null, "region": "eu-central-1", "trace_id": null, "auth_method": null, "provider": null, "session_duration": null, "currency": null, "payment_method": null, "retry_count": null, "file_size_bytes": null, "content_type": null, "memory_percent": null, "available_mb": null, "disk_usage_percent": null, "available_gb": null, "query_params": null, "result_count": null, "recipient": null, "smtp_code": null, "metrics_count": null, "time_window": null, "product_id": null, "rating": null, "version": null, "status": null, "test": null, "validation_errors": null}
+{"timestamp": "2025-10-17T05:47:30.394250Z", "level": "INFO", "service": "search-service", "host": "search-server-01", "request_id": "req-ea876f0f", "message": "File uploaded successfully", "duration_ms": 97, "status_code": 200, "user_id": "user-84906", "amount": null, "error": null, "region": "ap-south-1", "trace_id": null, "auth_method": null, "provider": null, "session_duration": null, "currency": null, "payment_method": null, "retry_count": null, "file_size_bytes": null, "content_type": null, "memory_percent": null, "available_mb": null, "disk_usage_percent": null, "available_gb": null, "query_params": null, "result_count": null, "recipient": null, "smtp_code": null, "metrics_count": null, "time_window": null, "product_id": null, "rating": null, "version": null, "status": null, "test": null, "validation_errors": null}
+{"timestamp": "2025-10-17T05:47:30.394258Z", "level": "ERROR", "service": "payment-service", "host": "payment-server-02", "request_id": "req-9eeac722", "message": "Internal server error", "duration_ms": 2791, "status_code": 503, "user_id": null, "amount": null, "error": "NullPointerException", "region": "eu-central-1", "trace_id": null, "auth_method": null, "provider": null, "session_duration": null, "currency": null, "payment_method": null, "retry_count": 2, "file_size_bytes": null, "content_type": null, "memory_percent": null, "available_mb": null, "disk_usage_percent": null, "available_gb": null, "query_params": null, "result_count": null, "recipient": null, "smtp_code": null, "metrics_count": null, "time_window": null, "product_id": null, "rating": null, "version": null, "status": null, "test": null, "validation_errors": null}
+{"timestamp": "2025-10-17T05:47:30.394266Z", "level": "INFO", "service": "inventory-service", "host": "inventory-server-01", "request_id": "req-493f7cb1", "message": "GET /api/v1/users/profile", "duration_ms": 134, "status_code": 200, "user_id": "user-95624", "amount": null, "error": null, "region": "eu-west-1", "trace_id": "trace-fc1305e1a04040c6", "auth_method": null, "provider": null, "session_duration": null, "currency": null, "payment_method": null, "retry_count": null, "file_size_bytes": null, "content_type": null, "memory_percent": null, "available_mb": null, "disk_usage_percent": null, "available_gb": null, "query_params": null, "result_count": null, "recipient": null, "smtp_code": null, "metrics_count": null, "time_window": null, "product_id": null, "rating": null, "version": null, "status": null, "test": true, "validation_errors": null}
+{"timestamp": "2025-10-17T05:47:30.394275Z", "level": "WARN", "service": "analytics-service", "host": "analytics-server-01", "request_id": "req-ee2f6d87", "message": "Payment declined", "duration_ms": null, "status_code": 402, "user_id": null, "amount": null, "error": null, "region": "us-east-1", "trace_id": null, "auth_method": null, "provider": null, "session_duration": null, "currency": null, "payment_method": null, "retry_count": null, "file_size_bytes": null, "content_type": null, "memory_percent": null, "available_mb": null, "disk_usage_percent": null, "available_gb": null, "query_params": null, "result_count": null, "recipient": null, "smtp_code": null, "metrics_count": null, "time_window": null, "product_id": null, "rating": null, "version": null, "status": null, "test": null, "validation_errors": null}
+{"timestamp": "2025-10-17T05:47:30.394296Z", "level": "INFO", "service": "payment-service", "host": "payment-server-02", "request_id": "req-8c3ce73f", "message": "Session created", "duration_ms": 143, "status_code": 204, "user_id": null, "amount": 534.26, "error": null, "region": "eu-central-1", "trace_id": "trace-71de2ad9f45a89b5", "auth_method": null, "provider": null, "session_duration": null, "currency": "EUR", "payment_method": "debit_card", "retry_count": null, "file_size_bytes": null, "content_type": null, "memory_percent": null, "available_mb": null, "disk_usage_percent": null, "available_gb": null, "query_params": null, "result_count": null, "recipient": null, "smtp_code": null, "metrics_count": null, "time_window": null, "product_id": null, "rating": null, "version": "2.0", "status": null, "test": null, "validation_errors": null}
+{"timestamp": "2025-10-17T05:47:30.394306Z", "level": "INFO", "service": "search-service", "host": "search-server-02", "request_id": "req-a1ce628d", "message": "Session created", "duration_ms": 78, "status_code": 200, "user_id": null, "amount": null, "error": null, "region": "us-west-2", "trace_id": null, "auth_method": null, "provider": null, "session_duration": null, "currency": null, "payment_method": null, "retry_count": null, "file_size_bytes": null, "content_type": null, "memory_percent": null, "available_mb": null, "disk_usage_percent": null, "available_gb": null, "query_params": {"category": "electronics", "limit": 50}, "result_count": 24, "recipient": null, "smtp_code": null, "metrics_count": null, "time_window": null, "product_id": null, "rating": null, "version": null, "status": null, "test": null, "validation_errors": null}
