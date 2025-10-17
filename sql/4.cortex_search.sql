@@ -21,7 +21,7 @@ USE WAREHOUSE QUICKSTART_KAFKA_CONNECTOR_WH;
 -- Includes both base and evolved schema attributes for comprehensive filtering
 CREATE OR REPLACE CORTEX SEARCH SERVICE application_logs_search
   ON MESSAGE
-  ATTRIBUTES LEVEL, SERVICE, ERROR, STATUS_CODE, MEMORY_PERCENT, DISK_USAGE_PERCENT, REGION
+  ATTRIBUTES LEVEL, SERVICE, ERROR, STATUS_CODE, DURATION_MS, MEMORY_PERCENT, DISK_USAGE_PERCENT, REGION
   WAREHOUSE = QUICKSTART_KAFKA_CONNECTOR_WH
   TARGET_LAG = '1 minute'
   AS (
@@ -31,6 +31,7 @@ CREATE OR REPLACE CORTEX SEARCH SERVICE application_logs_search
       SERVICE,
       ERROR,
       STATUS_CODE,
+      DURATION_MS::NUMBER as DURATION_MS,
       TIMESTAMP,
       REQUEST_ID,
       HOST,
@@ -58,7 +59,7 @@ SELECT
       "filter": {"@eq": {"LEVEL": "ERROR"}},
       "limit": 10
     }'
-  );
+  ) AS search_results;
 
 -- Search for payment issues with base schema columns
 SELECT
@@ -70,7 +71,7 @@ SELECT
       "filter": {"@eq": {"SERVICE": "payment-service"}},
       "limit": 10
     }'
-  );
+  ) AS search_results;
 
 -- Find database connection problems
 SELECT
@@ -82,7 +83,7 @@ SELECT
       "filter": {"@eq": {"LEVEL": "ERROR"}},
       "limit": 10
     }'
-  );
+  ) AS search_results;
 
 /*****************************************************
 | 3. Advanced Filters with Multiple Conditions
@@ -106,7 +107,7 @@ SELECT
       },
       "limit": 20
     }'
-  );
+  ) AS search_results;
 
 /*****************************************************
 | 4. Evolved Schema Examples
@@ -127,7 +128,7 @@ SELECT
       },
       "limit": 15
     }'
-  );
+  ) AS search_results;
 
 /*****************************************************
 | 5. Use Cases for Different Scenarios
@@ -143,19 +144,19 @@ SELECT
       "filter": {"@eq": {"LEVEL": "ERROR"}},
       "limit": 25
     }'
-  );
+  ) AS search_results;
 
--- Search for performance-related issues
+-- Search for performance-related issues (now with DURATION_MS indexed)
 SELECT
   SNOWFLAKE.CORTEX.SEARCH_PREVIEW(
     'QUICKSTART_KAFKA_CONNECTOR_DB.PUBLIC.application_logs_search',
     '{
       "query": "slow performance latency timeout",
-      "columns": ["MESSAGE", "SERVICE", "DURATION_MS", "STATUS_CODE", "TIMESTAMP"],
-      "filter": {"@gte": {"STATUS_CODE": 400}},
+      "columns": ["MESSAGE", "SERVICE", "DURATION_MS", "STATUS_CODE", "TIMESTAMP", "REQUEST_ID"],
+      "filter": {"@gte": {"DURATION_MS": 1000}},
       "limit": 20
     }'
-  );
+  ) AS search_results;
 
 -- Find inventory service warnings
 SELECT
@@ -172,7 +173,7 @@ SELECT
       },
       "limit": 15
     }'
-  );
+  ) AS search_results;
 
 /*****************************************************
 | 6. View Cortex Search Service Information
