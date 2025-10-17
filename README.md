@@ -1,260 +1,177 @@
 # Getting Started with Snowflake Openflow Kafka Connector
 
-This repository contains the companion code for the [Snowflake Openflow Kafka Connector Quickstart](https://quickstarts.snowflake.com/guide/getting_started_with_openflow_kafka_connector/index.html).
+Companion repository for the [Snowflake Openflow Kafka Connector Quickstart](https://quickstarts.snowflake.com/guide/getting_started_with_openflow_kafka_connector/index.html).
 
 ## Overview
 
-This quickstart demonstrates how to build a real-time streaming pipeline from Apache Kafka to Snowflake using the Openflow Kafka Connector. You'll learn how to:
+Build a real-time streaming pipeline from Apache Kafka to Snowflake using Openflow. Stream application logs from Kafka to Snowflake with automatic schema detection, schema evolution, and perform powerful SQL analytics including semantic search with Cortex Search.
 
-- Set up a Kafka topic for application log streaming
-- Configure Snowflake objects (database, schema, tables, network rules)
-- Deploy Openflow SPCS runtime
-- Configure the Kafka connector in Openflow Canvas
-- Stream real-time logs from Kafka to Snowflake
-- Perform powerful SQL analytics on streaming log data
+**📖 [Follow the Complete Quickstart Guide](https://quickstarts.snowflake.com/guide/getting_started_with_openflow_kafka_connector/index.html)**
 
 ## Repository Contents
 
 ```
 .
 ├── README.md                      # This file
+├── RPK_CLI_README.md              # Detailed RPK CLI setup guide
+├── Taskfile.yml                   # Task runner for common operations
 ├── LICENSE.txt                    # Apache 2.0 license
-├── env.template                   # Environment variable template for Kafka config
+├── pyproject.toml                 # Python project dependencies
+├── .env.template                  # Environment variable template
 ├── sql/
 │   ├── 1.snowflake_setup.sql     # Snowflake environment setup
-│   ├── 2.verify_ingestion.sql    # Data ingestion verification queries
-│   └── 3.analytics_queries.sql   # Example analytics queries
+│   ├── 2.verify_ingestion.sql    # Data ingestion verification
+│   ├── 2a.verify_base_schema.sql # Verify base schema ingestion
+│   ├── 2b.verify_schema_evolution.sql # Verify schema evolution
+│   ├── 3.analytics_queries.sql   # Example analytics queries
+│   ├── 4.cortex_search.sql       # Semantic search with Cortex Search
+│   └── 5.cleanup.sql             # Cleanup script
 └── sample-data/
-    ├── sample_logs.json           # Sample application log events
-    └── generate_logs.py           # Python script to produce logs to Kafka
+    ├── sample_logs.json           # 50 base schema sample records
+    ├── sample_logs_evolved.json   # 80 evolved schema sample records
+    └── generate_logs.py           # Python log generator script
 ```
 
 ## Quick Start
 
-### 1. Clone the Repository
+### 1. Clone and Setup
 
 ```bash
 git clone https://github.com/Snowflake-Labs/sfguide-getting-started-openflow-kafka-connector.git
 cd sfguide-getting-started-openflow-kafka-connector
+export QUICK_START_REPO=$PWD
 ```
 
-### 2. Follow the Quickstart Guide
-
-Follow the complete step-by-step guide at:
-**[Getting Started with Openflow Kafka Connector](https://quickstarts.snowflake.com/guide/getting_started_with_openflow_kafka_connector/index.html)**
-
-### 3. Setup Snowflake
-
-Execute the SQL script in Snowsight:
-
-```sql
--- Update network rule with your Kafka broker endpoints first!
--- Then run: sql/1.snowflake_setup.sql
-```
-
-### 4. Generate Sample Logs
-
-Use the provided Python script to produce sample logs to Kafka:
+### 2. Install Task Runner (Optional)
 
 ```bash
-# Install dependencies
-pip install kafka-python
+# macOS
+brew install go-task
 
-# Set up environment (recommended)
-cp env.template .env
-# Edit .env with your Kafka broker and topic settings
-export $(cat .env | xargs)
+# Linux
+sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
 
-# Test your Kafka connection first (recommended)
-python sample-data/generate_logs.py --test-connection
+# See all available tasks
+task list
+```
 
-# If connection test passes, produce logs
-python sample-data/generate_logs.py --count 50
+### 3. Follow the Quickstart Guide
 
-# Or use command-line arguments directly
-python sample-data/generate_logs.py \
-  --brokers YOUR-KAFKA-BROKER:9092 \
-  --topic application-logs \
-  --test-connection
+**👉 [Complete Step-by-Step Instructions](https://quickstarts.snowflake.com/guide/getting_started_with_openflow_kafka_connector/index.html)**
 
-python sample-data/generate_logs.py \
-  --brokers YOUR-KAFKA-BROKER:9092 \
-  --topic application-logs \
-  --count 50
+The quickstart guide walks you through:
 
-# Alternative: Use rpk (simpler and faster)
-rpk topic produce application-logs \
-  --brokers YOUR-KAFKA-BROKER:9092 \
-  < sample-data/sample_logs.json
+- Setting up Kafka and rpk CLI
+- Configuring Snowflake (database, network rules, External Access Integration)
+- Deploying Openflow SPCS runtime
+- Configuring the Kafka connector with automatic schema evolution
+- Generating and streaming logs
+- Running analytics and Cortex Search queries
+
+## Common Tasks
+
+### Generate Sample Files (No Kafka Required)
+
+```bash
+task generate-samples   # Generate both base and evolved sample files
+task generate-base      # Generate 50 base schema records
+task generate-evolved   # Generate 80 evolved schema records
+```
+
+### Test Kafka Connection
+
+```bash
+# Setup environment
+cp .env.template .env   # Edit with your Kafka credentials
+task test-kafka         # Verify connection
+```
+
+### Produce Logs to Kafka
+
+```bash
+# Using Python generator
+task produce-base       # Produce 50 base schema logs
+task produce-evolved    # Produce 80 evolved schema logs
+
+# Using rpk (faster)
+task rpk-produce-base
+task rpk-produce-evolved
+
+# Complete demo workflow
+task demo-full          # Run Phase 1 + Phase 2
+```
+
+### Kafka Topic Management
+
+```bash
+task kafka-create-topic      # Create application-logs topic
+task kafka-topics            # List all topics
+task kafka-cluster-info      # Show cluster information
 ```
 
 ## Prerequisites
 
 - **Snowflake Account**: Enterprise account with Openflow SPCS enabled
-- **Kafka Cluster**: Access to a Kafka cluster (GCP Managed Kafka, AWS MSK, Confluent Cloud, or self-hosted)
-- **Redpanda CLI (rpk)**: Recommended for Kafka operations ([install guide](https://docs.redpanda.com/current/get-started/rpk-install/))
-- **Python 3.7+**: For the log generator script (optional)
-- **Network Connectivity**: Kafka brokers must be accessible from Snowflake
-
-## Use Cases
-
-This pattern applies to:
-
-- **Log Aggregation**: Centralize logs from distributed microservices
-- **Real-time Monitoring**: Stream operational metrics for dashboards and alerting
-- **Event Sourcing**: Capture application events for analytics and replay
-- **Observability**: Track system health, performance, and errors
-- **Incident Investigation**: Query and analyze logs with powerful SQL
-
-## Key Features
-
-- **Real-Time Ingestion**: Logs appear in Snowflake within seconds via Snowpipe Streaming
-- **Flexible Schema**: JSON logs stored in VARIANT columns for schema flexibility
-- **Scalable**: Handles high-throughput Kafka topics with automatic scaling
-- **Cost-Effective**: Snowflake storage costs are lower than dedicated log platforms
-- **Powerful Analytics**: Use SQL to query, aggregate, and analyze logs
-
-## Documentation
-
-- [Openflow Documentation](https://docs.snowflake.com/en/user-guide/data-integration/openflow/about)
-- [Kafka Connector Documentation](https://docs.snowflake.com/en/user-guide/data-integration/openflow/connectors/kafka/about)
-- [Kafka Connector Performance Tuning](https://docs.snowflake.com/en/user-guide/data-integration/openflow/connectors/kafka/performance-tuning)
-- [All Openflow Connectors](https://docs.snowflake.com/en/user-guide/data-integration/openflow/connectors/about-openflow-connectors)
+- **Kafka Cluster**: Access to Kafka (Confluent Cloud, AWS MSK, GCP Managed Kafka, or self-hosted)
+- **Redpanda CLI (rpk)**: For Kafka operations ([install guide](https://docs.redpanda.com/current/get-started/rpk-install/))
+  - 📖 See [RPK_CLI_README.md](RPK_CLI_README.md) for detailed setup with Confluent Cloud
+- **Python 3.7+**: Optional, for the log generator script
+- **Task Runner**: Optional, but recommended for simplified command execution
 
 ## Sample Data
 
-The `sample-data/sample_logs.json` file contains 25 realistic application log events in JSON format, including:
+**`sample-data/sample_logs.json`** (50 records):
 
-- Web API requests
-- Authentication events
-- Database operations
-- Payment processing
-- Error events
-- Performance metrics
+- Base schema with 11 fields (timestamp, level, service, host, message, etc.)
+- Web API requests, authentication, database operations, payments
 
-## Log Generator Script
+**`sample-data/sample_logs_evolved.json`** (80 records):
 
-The `generate_logs.py` script produces realistic application logs with:
+- Evolved schema with 29 fields
+- Includes additional fields: region, trace_id, auth_method, currency, payment_method, and more
+- Contains system metrics (memory_percent, disk_usage_percent) for Cortex Search examples
 
-- Multiple services (web-API, auth-service, payment-service, etc.)
-- Realistic log levels (INFO 70%, WARN 20%, ERROR 10%)
-- Request IDs for tracing
-- Performance metrics (duration, status codes)
-- Configurable message count and rate
-- **Connection testing** to verify Kafka connectivity
+**`sample-data/generate_logs.py`**:
 
-**Quick Start**:
+- Generate custom log files: `python generate_logs.py --count 100 --output my_logs.json`
+- Test Kafka connection: `python generate_logs.py --test-connection`
+- Produce to Kafka: `python generate_logs.py --count 100`
+- See `--help` for all options
 
-```bash
-# 1. Set up environment
-cp env.template .env  # Edit with your Kafka settings
-export $(cat .env | xargs)
+## SQL Scripts
 
-# 2. Test connection (recommended first step)
-python generate_logs.py --test-connection
+All SQL scripts are referenced in the quickstart guide:
 
-# 3. Produce logs
-python generate_logs.py --count 100
-```
+- **`1.snowflake_setup.sql`** - Create role, database, warehouse, network rules, External Access Integration
+- **`2.verify_ingestion.sql`** - Verify data ingestion and check record counts
+- **`2a.verify_base_schema.sql`** - Validate base schema (11 fields)
+- **`2b.verify_schema_evolution.sql`** - Verify evolved schema (29 fields) and automatic column detection
+- **`3.analytics_queries.sql`** - Advanced analytics examples (log analysis, time-series, performance metrics)
+- **`4.cortex_search.sql`** - Semantic search queries with Cortex Search
+- **`5.cleanup.sql`** - Clean up all Snowflake resources
 
-**Connection Test Mode**:
+## Resources
 
-The `--test-connection` flag performs a comprehensive check:
+**Quickstart & Documentation:**
 
-- ✓ Tests broker connectivity
-- ✓ Fetches cluster metadata and lists brokers
-- ✓ Checks topic existence and partition count
-- ✓ Verifies write permissions by sending a test message
+- [Openflow Kafka Connector Quickstart](https://quickstarts.snowflake.com/guide/getting_started_with_openflow_kafka_connector/index.html) ⭐
+- [Openflow Documentation](https://docs.snowflake.com/en/user-guide/data-integration/openflow/about)
+- [Kafka Connector Documentation](https://docs.snowflake.com/en/user-guide/data-integration/openflow/connectors/kafka/about)
+- [rpk CLI Setup Guide](RPK_CLI_README.md)
 
-```bash
-# Test with environment variables
-python generate_logs.py --test-connection
+**Related Quickstarts:**
 
-# Or test with CLI arguments
-python generate_logs.py --brokers localhost:9092 --topic logs --test-connection
-```
+- [Getting Started with Openflow SPCS](https://quickstarts.snowflake.com/guide/getting_started_with_openflow_spcs/index.html)
+- [Getting Started with PostgreSQL CDC](https://quickstarts.snowflake.com/guide/getting_started_with_openflow_postgresql_cdc/index.html)
+- [Getting Started with Unstructured Data Pipeline](https://quickstarts.snowflake.com/guide/getting_started_openflow_unstructured_data_pipeline/index.html)
 
-**Production Usage**:
+## Support
 
-```bash
-# Basic usage
-python generate_logs.py --brokers localhost:9092 --topic application-logs --count 100
-
-# Using environment variables (recommended)
-export KAFKA_BROKERS=localhost:9092
-export KAFKA_TOPIC=application-logs
-python generate_logs.py --count 100
-
-# With delay between messages (throttling)
-python generate_logs.py --count 50 --delay 0.5
-
-# Continuous mode (for load testing)
-python generate_logs.py --count 10 --continuous
-```
-
-**Environment Variables**:
-
-The script supports the following environment variables for convenience:
-
-- `KAFKA_BROKERS`: Kafka broker address(es)
-- `KAFKA_TOPIC`: Target Kafka topic name
-- `KAFKA_SECURITY_PROTOCOL`: Security protocol (PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL)
-- `KAFKA_SASL_MECHANISM`: SASL mechanism (PLAIN, SCRAM-SHA-256, SCRAM-SHA-512, etc.)
-- `KAFKA_SASL_USERNAME`: SASL username (required for PLAIN, SCRAM-*)
-- `KAFKA_SASL_PASSWORD`: SASL password (required for PLAIN, SCRAM-*)
-
-**SASL Authentication**:
-
-For managed Kafka services like Confluent Cloud or secured Kafka clusters:
-
-```bash
-# Example: Confluent Cloud with SASL_SSL
-export KAFKA_BROKERS=pkc-xxxxx.us-east-1.aws.confluent.cloud:9092
-export KAFKA_TOPIC=application-logs
-export KAFKA_SECURITY_PROTOCOL=SASL_SSL
-export KAFKA_SASL_MECHANISM=PLAIN
-export KAFKA_SASL_USERNAME=YOUR_API_KEY
-export KAFKA_SASL_PASSWORD=YOUR_API_SECRET
-
-# Test connection
-python generate_logs.py --test-connection
-
-# Produce logs
-python generate_logs.py --count 100
-```
-
-See `env.template` for a complete configuration example with Confluent Cloud and other setups.
-
-## Troubleshooting
-
-If you encounter issues:
-
-1. **Connection problems**: Run `python generate_logs.py --test-connection` to verify Kafka connectivity
-2. **No data flowing**: Check Kafka topic has messages, verify network rules, ensure processors are running
-3. **Connection errors**: Verify Kafka broker endpoints in network rule, check security protocol
-4. **Slow ingestion**: Consider scaling Openflow runtime, check Kafka partition count
-
-See the [quickstart guide](https://quickstarts.snowflake.com/guide/getting_started_with_openflow_kafka_connector/index.html) for detailed troubleshooting steps.
-
-## Contributing
-
-We welcome contributions! Please open an issue or pull request on GitHub.
+- [Open an issue](https://github.com/Snowflake-Labs/sfquickstarts/issues) on GitHub
+- Visit [Snowflake Community](https://community.snowflake.com/)
 
 ## License
 
 Copyright (c) 2025 Snowflake Inc. All rights reserved.
 
 Licensed under the Apache License, Version 2.0. See [LICENSE.txt](LICENSE.txt) for details.
-
-## Support
-
-For questions or issues:
-
-- [Open an issue](https://github.com/Snowflake-Labs/sfquickstarts/issues) on GitHub
-- Visit [Snowflake Community](https://community.snowflake.com/)
-
-## Related Quickstarts
-
-- [Getting Started with Openflow SPCS](https://quickstarts.snowflake.com/guide/getting_started_with_openflow_spcs/index.html)
-- [Getting Started with PostgreSQL CDC](https://quickstarts.snowflake.com/guide/getting_started_with_openflow_postgresql_cdc/index.html)
-- [Getting Started with Unstructured Data Pipeline](https://quickstarts.snowflake.com/guide/getting_started_openflow_unstructured_data_pipeline/index.html)
